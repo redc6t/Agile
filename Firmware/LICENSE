@@ -1,0 +1,56 @@
+PLTD FIRMWARE LICENCE (PROPRIETARY)
+
+Copyright (c) 2026 Pietro Gambarin, Mullaloo Motorsport Engineering.
+All rights reserved.
+
+1. Scope
+   This licence covers the PLTD firmware: all source code, object code and
+   compiled binaries (including files in Firmware/releases/), and any update
+   distributed for it (the "Firmware").
+
+2. Ownership
+   The Firmware is licensed, not sold. All title, copyright and other
+   intellectual property rights in the Firmware remain with the copyright
+   holder. The source code is confidential and is not published.
+
+3. Permitted use
+   You may download, install and run the Firmware binaries only on PLTD
+   hardware, for your own use.
+
+4. Restrictions
+   Except as permitted in section 3, you may not:
+   a) modify the Firmware or create derivative works from it;
+   b) distribute, sublicense, sell or otherwise make the Firmware available
+      to others, or host it for download;
+   c) remove or alter any copyright notice, version string or licence text;
+   d) use the Firmware, or any part of it, in another product.
+
+5. Third-party components
+   The Firmware binaries include third-party libraries under their own
+   licences (for example the Arduino-ESP32 core and ESPAsyncWebServer /
+   AsyncTCP under the LGPL, and ArduinoJson, SparkFun u-blox GNSS and
+   Adafruit GFX / ST7789 under MIT or BSD licences). Nothing in this licence
+   restricts any right those licences grant you for those components.
+
+6. Published documentation
+   The documentation in Documentation/ is licensed separately under
+   CC BY 4.0. It describes the Firmware's behaviour and logic. It grants no
+   rights to the Firmware itself.
+
+7. No warranty
+   THE FIRMWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING FITNESS FOR A PARTICULAR PURPOSE. It is a timing
+   and information aid only and must not be relied on for safety. Race
+   control signals from officials always take precedence over anything
+   shown on the device.
+
+8. Limitation of liability
+   To the maximum extent permitted by law, the copyright holder is not
+   liable for any damages arising from the use of, or inability to use, the
+   Firmware, including damage to vehicles, equipment or data.
+
+9. Termination
+   This licence ends automatically if you breach it. On termination you must
+   stop using and delete all copies of the Firmware.
+
+Permission for any use not listed above: pietro.gambarin@gmail.com

@@ -161,10 +161,12 @@ Designed for circuit racing, track days and motorsport testing, giving entry-lev
 
 **License**
 
-Code (ESP32 projects): MIT license.
+| Part | Licence |
+|---|---|
+| Hardware (schematics, PCB, fabrication files, enclosure) | [CERN-OHL-S-2.0](https://ohwr.org/cern_ohl_s_v2.txt) |
+| Documentation (including the firmware pseudocode and diagrams) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| Firmware (source and binaries) | Proprietary, all rights reserved. The source is not published; binaries are free to use on PLTD hardware. See [Firmware/LICENSE](Firmware/LICENSE). |
 
-Code (STM32 projects): GPL3.0.
-
-Hardware: cc-by-sa-3.0
+See [LICENSE](LICENSE) for details.
 
 By: Pietro Gambarin (pietro.gambarin@gmail.com)

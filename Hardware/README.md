@@ -26,4 +26,4 @@ Tag each released board in git as `hw-vX.Y`.
 
 ## License
 
-Hardware design files are licensed CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/).
+Hardware design files are licensed under the CERN Open Hardware Licence v2, Strongly Reciprocal (CERN-OHL-S-2.0, https://ohwr.org/cern_ohl_s_v2.txt).
