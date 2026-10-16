@@ -1,0 +1,24 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Windows scripts keep CRLF
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binary design and documentation assets
+*.pdf   binary
+*.xlsx  binary
+*.docx  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.heic  binary
+*.mp4   binary
+*.mov   binary
+*.zip   binary
+*.bin   binary
+*.elf   binary
+*.stl   binary
+*.3mf   binary
+*.step  binary
+*.stp   binary

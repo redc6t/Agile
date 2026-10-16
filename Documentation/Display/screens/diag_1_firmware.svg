@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="258" viewBox="0 0 294 86" role="img" aria-label="Diagnostic page 1/5, firmware">
+<title>Diagnostic page 1/5, firmware</title>
+<rect x="0" y="0" width="294" height="86" rx="4" fill="#161616" stroke="#3a3a3a" stroke-width="0.6"/>
+<g transform="translate(5,5)" shape-rendering="crispEdges">
+<clipPath id="p"><rect width="284" height="76"/></clipPath>
+<g clip-path="url(#p)">
+<rect x="0" y="0" width="284" height="76" fill="#000000"/>
+<rect x="6" y="2" width="6" height="8" fill="#000000"/>
+<rect x="12" y="2" width="6" height="8" fill="#000000"/>
+<rect x="18" y="2" width="6" height="8" fill="#000000"/>
+<rect x="24" y="2" width="6" height="8" fill="#000000"/>
+<rect x="30" y="2" width="6" height="8" fill="#000000"/>
+<rect x="36" y="2" width="6" height="8" fill="#000000"/>
+<rect x="42" y="2" width="6" height="8" fill="#000000"/>
+<rect x="48" y="2" width="6" height="8" fill="#000000"/>
+<rect x="54" y="2" width="6" height="8" fill="#000000"/>
+<rect x="60" y="2" width="6" height="8" fill="#000000"/>
+<rect x="66" y="2" width="6" height="8" fill="#000000"/>
+<rect x="72" y="2" width="6" height="8" fill="#000000"/>
+<rect x="78" y="2" width="6" height="8" fill="#000000"/>
+<text x="6" y="9.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#00FFFF" textLength="77" lengthAdjust="spacingAndGlyphs" xml:space="preserve">1/5  FIRMWARE</text>
+<rect x="6" y="16" width="6" height="8" fill="#000000"/>
+<rect x="12" y="16" width="6" height="8" fill="#000000"/>
+<rect x="18" y="16" width="6" height="8" fill="#000000"/>
+<rect x="24" y="16" width="6" height="8" fill="#000000"/>
+<rect x="30" y="16" width="6" height="8" fill="#000000"/>
+<rect x="36" y="16" width="6" height="8" fill="#000000"/>
+<rect x="42" y="16" width="6" height="8" fill="#000000"/>
+<rect x="48" y="16" width="6" height="8" fill="#000000"/>
+<rect x="54" y="16" width="6" height="8" fill="#000000"/>
+<rect x="60" y="16" width="6" height="8" fill="#000000"/>
+<rect x="66" y="16" width="6" height="8" fill="#000000"/>
+<text x="6" y="23.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#FFFFFF" textLength="65" lengthAdjust="spacingAndGlyphs" xml:space="preserve">FW  v0.17.0</text>
+<rect x="6" y="27" width="6" height="8" fill="#000000"/>
+<rect x="12" y="27" width="6" height="8" fill="#000000"/>
+<rect x="18" y="27" width="6" height="8" fill="#000000"/>
+<rect x="24" y="27" width="6" height="8" fill="#000000"/>
+<rect x="30" y="27" width="6" height="8" fill="#000000"/>
+<rect x="36" y="27" width="6" height="8" fill="#000000"/>
+<rect x="42" y="27" width="6" height="8" fill="#000000"/>
+<rect x="48" y="27" width="6" height="8" fill="#000000"/>
+<rect x="54" y="27" width="6" height="8" fill="#000000"/>
+<rect x="60" y="27" width="6" height="8" fill="#000000"/>
+<rect x="66" y="27" width="6" height="8" fill="#000000"/>
+<rect x="72" y="27" width="6" height="8" fill="#000000"/>
+<rect x="78" y="27" width="6" height="8" fill="#000000"/>
+<rect x="84" y="27" width="6" height="8" fill="#000000"/>
+<rect x="90" y="27" width="6" height="8" fill="#000000"/>
+<rect x="96" y="27" width="6" height="8" fill="#000000"/>
+<text x="6" y="34.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#FFFFFF" textLength="95" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Heap 142 KB free</text>
+<rect x="6" y="38" width="6" height="8" fill="#000000"/>
+<rect x="12" y="38" width="6" height="8" fill="#000000"/>
+<rect x="18" y="38" width="6" height="8" fill="#000000"/>
+<rect x="24" y="38" width="6" height="8" fill="#000000"/>
+<rect x="30" y="38" width="6" height="8" fill="#000000"/>
+<rect x="36" y="38" width="6" height="8" fill="#000000"/>
+<rect x="42" y="38" width="6" height="8" fill="#000000"/>
+<rect x="48" y="38" width="6" height="8" fill="#000000"/>
+<rect x="54" y="38" width="6" height="8" fill="#000000"/>
+<rect x="60" y="38" width="6" height="8" fill="#000000"/>
+<rect x="66" y="38" width="6" height="8" fill="#000000"/>
+<rect x="72" y="38" width="6" height="8" fill="#000000"/>
+<rect x="78" y="38" width="6" height="8" fill="#000000"/>
+<rect x="84" y="38" width="6" height="8" fill="#000000"/>
+<rect x="90" y="38" width="6" height="8" fill="#000000"/>
+<rect x="96" y="38" width="6" height="8" fill="#000000"/>
+<rect x="102" y="38" width="6" height="8" fill="#000000"/>
+<rect x="108" y="38" width="6" height="8" fill="#000000"/>
+<text x="6" y="45.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#FFFFFF" textLength="107" lengthAdjust="spacingAndGlyphs" xml:space="preserve">PSRAM 8071 KB free</text>
+<rect x="6" y="49" width="6" height="8" fill="#000000"/>
+<rect x="12" y="49" width="6" height="8" fill="#000000"/>
+<rect x="18" y="49" width="6" height="8" fill="#000000"/>
+<rect x="24" y="49" width="6" height="8" fill="#000000"/>
+<rect x="30" y="49" width="6" height="8" fill="#000000"/>
+<rect x="36" y="49" width="6" height="8" fill="#000000"/>
+<rect x="42" y="49" width="6" height="8" fill="#000000"/>
+<rect x="48" y="49" width="6" height="8" fill="#000000"/>
+<rect x="54" y="49" width="6" height="8" fill="#000000"/>
+<rect x="60" y="49" width="6" height="8" fill="#000000"/>
+<rect x="66" y="49" width="6" height="8" fill="#000000"/>
+<rect x="72" y="49" width="6" height="8" fill="#000000"/>
+<rect x="78" y="49" width="6" height="8" fill="#000000"/>
+<rect x="84" y="49" width="6" height="8" fill="#000000"/>
+<rect x="90" y="49" width="6" height="8" fill="#000000"/>
+<rect x="96" y="49" width="6" height="8" fill="#000000"/>
+<rect x="102" y="49" width="6" height="8" fill="#000000"/>
+<rect x="108" y="49" width="6" height="8" fill="#000000"/>
+<rect x="114" y="49" width="6" height="8" fill="#000000"/>
+<rect x="120" y="49" width="6" height="8" fill="#000000"/>
+<rect x="126" y="49" width="6" height="8" fill="#000000"/>
+<rect x="132" y="49" width="6" height="8" fill="#000000"/>
+<rect x="138" y="49" width="6" height="8" fill="#000000"/>
+<rect x="144" y="49" width="6" height="8" fill="#000000"/>
+<rect x="150" y="49" width="6" height="8" fill="#000000"/>
+<rect x="156" y="49" width="6" height="8" fill="#000000"/>
+<rect x="162" y="49" width="6" height="8" fill="#000000"/>
+<rect x="168" y="49" width="6" height="8" fill="#000000"/>
+<text x="6" y="56.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#FFFFFF" textLength="167" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Trace DUAL (promotion armed)</text>
+<rect x="6" y="60" width="6" height="8" fill="#000000"/>
+<rect x="12" y="60" width="6" height="8" fill="#000000"/>
+<rect x="18" y="60" width="6" height="8" fill="#000000"/>
+<rect x="24" y="60" width="6" height="8" fill="#000000"/>
+<rect x="30" y="60" width="6" height="8" fill="#000000"/>
+<rect x="36" y="60" width="6" height="8" fill="#000000"/>
+<rect x="42" y="60" width="6" height="8" fill="#000000"/>
+<rect x="48" y="60" width="6" height="8" fill="#000000"/>
+<rect x="54" y="60" width="6" height="8" fill="#000000"/>
+<rect x="60" y="60" width="6" height="8" fill="#000000"/>
+<rect x="66" y="60" width="6" height="8" fill="#000000"/>
+<text x="6" y="67.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#FFFFFF" textLength="65" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Flash 16 MB</text>
+</g>
+</g>
+</svg>

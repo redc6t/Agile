@@ -1,0 +1,57 @@
+# Mullaloo Motorsport Engineering
+# 16MB dual-OTA partition table — SHARED by BTTM and PLTD (LapTimer).
+# Rows verified byte-identical to the table BTTM has been running since
+# v2.7.0. Only the commentary below was corrected (Jul 2026).
+#
+# USAGE:
+#   1. Save in the sketch folder named EXACTLY "partitions.csv".
+#      platform.txt prebuild hook 3 copies {build.source.path}/partitions.csv
+#      over the selected scheme, at highest priority. Any other filename —
+#      partitions_bttm.csv, partitions-16MB.csv — is silently ignored.
+#   2. Tools > Partition Scheme > "Custom".
+#      Required because the IDE's binary size check comes from the menu
+#      entry's upload.maximum_size, not from this file. Note that the
+#      "ESP32S3 Dev Module Octal (WROOM2)" board entry has NO Custom option;
+#      both products use the plain "ESP32S3 Dev Module" entry.
+#
+# BOARD SETTINGS (verified against Tools > Get Board Info, Jul 2026):
+#   Module            ESP32-S3-WROOM-1-N16R8 (quad flash + octal PSRAM)
+#   Board             "ESP32S3 Dev Module"
+#   Flash Mode        QIO 80MHz    <- WROOM-1 is QUAD flash. OPI fails with
+#                                     "Octal Flash option selected, but
+#                                     EFUSE not configured!"
+#   Flash Size        16MB (128Mb)
+#   PSRAM             OPI PSRAM
+#   Partition Scheme  Custom (this file)
+#
+# FIXED BY THE TOOLCHAIN — DO NOT MOVE:
+#   nvs      must start at 0x9000 and be exactly 0x5000 long, so that
+#   otadata  lands at 0xe000 — platform.txt hard-codes boot_app0.bin to
+#            flash address 0xe000 on every serial upload.
+#   app0     must start at 0x10000 — platform.txt hard-codes the sketch
+#            binary to flash address 0x10000.
+# Consequence: NVS cannot be enlarged without breaking serial uploads.
+#
+# LAYOUT (flash = 0x1000000 = 16,777,216 bytes):
+#   nvs      0x009000 .. 0x00E000     20 KB   WiFi creds, thresholds, config
+#   otadata  0x00E000 .. 0x010000      8 KB   OTA boot selection metadata
+#   app0     0x010000 .. 0x410000   4096 KB   ota_0 — primary application
+#   app1     0x410000 .. 0x810000   4096 KB   ota_1 — OTA staging slot
+#   spiffs   0x810000 .. 0x1000000  8128 KB   reserved, unused by both
+#                                             products (BTTM logs to SD,
+#                                             PLTD to external W25N04KV
+#                                             SPI NAND)
+#   Contiguous, no gaps, exact 16MB fit.
+#
+# MIGRATION: the first flash after adopting or changing this table must be
+# over USB with Tools > Erase All Flash Before Sketch Upload > Enabled. Set
+# it back to Disabled immediately afterwards, or every serial upload wipes
+# NVS. OTA rewrites an app slot only — never the bootloader or this table —
+# so OTA can never migrate a partition layout.
+#
+# Name,    Type, SubType,  Offset,    Size,     Flags
+nvs,       data, nvs,      0x9000,    0x5000,
+otadata,   data, ota,      0xe000,    0x2000,
+app0,      app,  ota_0,    0x10000,   0x400000,
+app1,      app,  ota_1,    0x410000,  0x400000,
+spiffs,    data, spiffs,   0x810000,  0x7F0000,

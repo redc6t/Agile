@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="258" viewBox="0 0 294 86" role="img" aria-label="Latched YELLOW FLAG">
+<title>Latched YELLOW FLAG</title>
+<rect x="0" y="0" width="294" height="86" rx="4" fill="#161616" stroke="#3a3a3a" stroke-width="0.6"/>
+<g transform="translate(5,5)" shape-rendering="crispEdges">
+<clipPath id="p"><rect width="284" height="76"/></clipPath>
+<g clip-path="url(#p)">
+<rect x="0" y="0" width="284" height="76" fill="#FFFF00"/>
+<text x="43" y="47.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="28.80" font-weight="bold" fill="#000000" textLength="195" lengthAdjust="spacingAndGlyphs" xml:space="preserve">YELLOW FLAG</text>
+</g>
+</g>
+</svg>

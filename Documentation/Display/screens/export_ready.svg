@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="258" viewBox="0 0 294 86" role="img" aria-label="USB log export, ready">
+<title>USB log export, ready</title>
+<rect x="0" y="0" width="294" height="86" rx="4" fill="#161616" stroke="#3a3a3a" stroke-width="0.6"/>
+<g transform="translate(5,5)" shape-rendering="crispEdges">
+<clipPath id="p"><rect width="284" height="76"/></clipPath>
+<g clip-path="url(#p)">
+<rect x="0" y="0" width="284" height="76" fill="#000000"/>
+<text x="6" y="18.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="19.20" font-weight="bold" fill="#00FFFF" textLength="166" lengthAdjust="spacingAndGlyphs" xml:space="preserve">USB LOG EXPORT</text>
+<text x="6" y="35.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#FFFFFF" textLength="161" lengthAdjust="spacingAndGlyphs" xml:space="preserve">27 sessions  39/508 MB used</text>
+<text x="6" y="49.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#00FF00" textLength="185" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Connect USB-C to PC (read-only)</text>
+<text x="6" y="63.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#414041" textLength="161" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Hold OK 5s = ERASE ALL LOGS</text>
+<text x="6" y="73.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#414041" textLength="161" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Power via RAW_BATT required</text>
+</g>
+</g>
+</svg>

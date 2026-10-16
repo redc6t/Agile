@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="258" viewBox="0 0 294 86" role="img" aria-label="OK held 0.9-1.2 s (no action on release)">
+<title>OK held 0.9-1.2 s (no action on release)</title>
+<rect x="0" y="0" width="294" height="86" rx="4" fill="#161616" stroke="#3a3a3a" stroke-width="0.6"/>
+<g transform="translate(5,5)" shape-rendering="crispEdges">
+<clipPath id="p"><rect width="284" height="76"/></clipPath>
+<g clip-path="url(#p)">
+<rect x="0" y="0" width="284" height="76" fill="#000000"/>
+<text x="79" y="29.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="28.80" font-weight="bold" fill="#414041" textLength="123" lengthAdjust="spacingAndGlyphs" xml:space="preserve">HOLD...</text>
+<text x="28" y="60.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="19.20" font-weight="bold" fill="#414041" textLength="226" lengthAdjust="spacingAndGlyphs" xml:space="preserve">RELEASE = NO ACTION</text>
+</g>
+</g>
+</svg>

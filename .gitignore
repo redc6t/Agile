@@ -1,0 +1,26 @@
+# --- Arduino / ESP32 build output ---
+build/
+*.elf
+*.map
+*.o
+*.a
+.pio/
+.vscode/
+# Release binaries are tracked on purpose
+!Firmware/releases/**/*.bin
+
+# --- Secrets (Wi-Fi credentials, keys) ---
+Firmware/PLTD/secrets.h
+*.env
+
+# --- LibrePCB ---
+Hardware/PCB/**/output/
+Hardware/PCB/**/.lock
+*~
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.bak

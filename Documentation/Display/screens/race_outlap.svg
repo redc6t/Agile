@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="258" viewBox="0 0 294 86" role="img" aria-label="Racing, out-lap after the pits (gray until rejoin)">
+<title>Racing, out-lap after the pits (gray until rejoin)</title>
+<rect x="0" y="0" width="294" height="86" rx="4" fill="#161616" stroke="#3a3a3a" stroke-width="0.6"/>
+<g transform="translate(5,5)" shape-rendering="crispEdges">
+<clipPath id="p"><rect width="284" height="76"/></clipPath>
+<g clip-path="url(#p)">
+<rect x="0" y="0" width="284" height="76" fill="#000000"/>
+<rect x="94" y="9" width="96" height="10" fill="#9C6500"/>
+<rect x="141" y="0" width="3" height="28" fill="#FFFFFF"/>
+<text x="6" y="47.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="19.20" font-weight="bold" fill="#414041" textLength="70" lengthAdjust="spacingAndGlyphs" xml:space="preserve">+0.000</text>
+<rect x="3" y="52" width="29" height="22" fill="#414041"/>
+<rect x="34" y="52" width="29" height="22" fill="#414041"/>
+<rect x="65" y="52" width="29" height="22" fill="#414041"/>
+<rect x="96" y="52" width="29" height="22" fill="#00FF00"/>
+<rect x="127" y="52" width="29" height="22" fill="#202020"/>
+<rect x="132" y="52" width="19" height="22" fill="#FFFFFF"/>
+<rect x="158" y="52" width="29" height="22" fill="#202020"/>
+<rect x="189" y="52" width="29" height="22" fill="#202020"/>
+<rect x="220" y="52" width="29" height="22" fill="#202020"/>
+<rect x="251" y="52" width="29" height="22" fill="#202020"/>
+</g>
+</g>
+</svg>

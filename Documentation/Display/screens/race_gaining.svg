@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="258" viewBox="0 0 294 86" role="img" aria-label="Racing, gaining 0.8 s, 1 s scale">
+<title>Racing, gaining 0.8 s, 1 s scale</title>
+<rect x="0" y="0" width="294" height="86" rx="4" fill="#161616" stroke="#3a3a3a" stroke-width="0.6"/>
+<g transform="translate(5,5)" shape-rendering="crispEdges">
+<clipPath id="p"><rect width="284" height="76"/></clipPath>
+<g clip-path="url(#p)">
+<rect x="0" y="0" width="284" height="76" fill="#000000"/>
+<rect x="144" y="2" width="124" height="24" fill="#00FF00"/>
+<rect x="141" y="0" width="3" height="28" fill="#FFFFFF"/>
+<rect x="258" y="0" width="26" height="9" fill="#000000"/>
+<rect x="260" y="1" width="6" height="8" fill="#000000"/>
+<rect x="266" y="1" width="6" height="8" fill="#000000"/>
+<text x="260" y="8.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="9.60" font-weight="bold" fill="#414041" textLength="11" lengthAdjust="spacingAndGlyphs" xml:space="preserve">1s</text>
+<text x="6" y="47.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="19.20" font-weight="bold" fill="#00FF00" textLength="70" lengthAdjust="spacingAndGlyphs" xml:space="preserve">-1.234</text>
+<text x="182" y="47.0" font-family="DejaVu Sans Mono,Consolas,Menlo,monospace" font-size="19.20" font-weight="bold" fill="#FFFFFF" textLength="94" lengthAdjust="spacingAndGlyphs" xml:space="preserve">2:26.512</text>
+<rect x="3" y="52" width="29" height="22" fill="#00FF00"/>
+<rect x="34" y="52" width="29" height="22" fill="#00FF00"/>
+<rect x="65" y="52" width="29" height="22" fill="#FF0000"/>
+<rect x="96" y="52" width="29" height="22" fill="#00FF00"/>
+<rect x="127" y="52" width="29" height="22" fill="#202020"/>
+<rect x="137" y="52" width="19" height="22" fill="#FFFFFF"/>
+<rect x="158" y="52" width="29" height="22" fill="#202020"/>
+<rect x="189" y="52" width="29" height="22" fill="#202020"/>
+<rect x="220" y="52" width="29" height="22" fill="#202020"/>
+<rect x="251" y="52" width="29" height="22" fill="#202020"/>
+</g>
+</g>
+</svg>
