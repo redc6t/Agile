@@ -2,6 +2,7 @@
 
 | Document | Contents |
 |---|---|
+| [TechnicalSpec.md](TechnicalSpec.md) | Hardware specification (PCB v1.1, firmware up to v0.17.0): power, GPIO map, peripherals, connectors, BOM, open items |
 | [Architecture.md](Architecture.md) | System overview, tasks, data flow, timing logic, storage, trackside network |
 | [Pseudocode.md](Pseudocode.md) | Firmware v0.17.0 as pseudocode, module by module, with state diagrams |
 | [Display.md](Display.md) | Every driver-display screen and scenario, rendered from the firmware drawing code |
