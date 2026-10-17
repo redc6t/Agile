@@ -1,8 +1,8 @@
-# PLTD Pit Wall Interface
+# Agile Pit Wall Interface
 
 Taken from the firmware source (v0.17.0, `setupWebServer()`, `onWsEvent()`, `wsPushLive()`, `buildDataJson()`). The firmware is the source of truth: update this file when the API changes. PWSM consumes it through `PWSM_Pit_Wall_Stategy_Manager/lib/adapters/pltd.js`.
 
-PLTD is the server. Clients connect to `ws://<ip>/ws` (port 80) and poll HTTP on the same host. Station mode only; DHCP by default (`WIFI_USE_STATIC_IP 0`), trackside static address `192.168.0.41` when enabled.
+Agile is the server. Clients connect to `ws://<ip>/ws` (port 80) and poll HTTP on the same host. Station mode only; DHCP by default (`WIFI_USE_STATIC_IP 0`), trackside static address `192.168.0.41` when enabled.
 
 ## WebSocket, device to client
 

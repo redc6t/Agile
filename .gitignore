@@ -10,7 +10,7 @@ build/
 !Firmware/releases/**/*.bin
 
 # --- Secrets (Wi-Fi credentials, keys) ---
-Firmware/PLTD/secrets.h
+Firmware/Agile/secrets.h
 *.env
 
 # --- LibrePCB ---

@@ -1,4 +1,4 @@
-# PLTD Technical Specification
+# Agile Technical Specification
 
 Hardware revision **PCB v1.1**, firmware up to **v0.17.0**.
 

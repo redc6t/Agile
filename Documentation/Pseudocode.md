@@ -1,4 +1,4 @@
-# PLTD Firmware Pseudocode (v0.17.0)
+# Agile Firmware Pseudocode (v0.17.0)
 
 Pseudocode of `LapTimer v0.17.0` (single-file Arduino sketch, ~9,200 lines). It follows the source section by section and keeps the real constant and function names, so any block here can be found in the source with a text search.
 

@@ -1,11 +1,11 @@
-# PLTD Firmware
+# Agile Firmware
 
 | Path | Contents |
 |---|---|
-| `PLTD/` | Arduino sketch. The folder name must match `PLTD.ino` (Arduino IDE rule). |
+| `Agile/` | Arduino sketch. The folder name must match `Agile.ino` (Arduino IDE rule). |
 | `lib/` | Project-local or patched libraries not installed through the Library Manager. |
 | `tools/` | Host-side helpers: flashing scripts, log parsers, test harnesses. |
-| `releases/` | Tagged binaries, one folder per version (`vX.Y.Z/`) with `PLTD.ino.bin`, bootloader and partition table. |
+| `releases/` | Tagged binaries, one folder per version (`vX.Y.Z/`) with `Agile.ino.bin`, bootloader and partition table. |
 | `CHANGELOG.md` | Firmware version history. |
 
 ## Toolchain
@@ -16,7 +16,7 @@
 
 ## Secrets
 
-Wi-Fi credentials go in `PLTD/secrets.h`, which is git-ignored. Keep a `secrets.example.h` in the sketch folder with placeholder values.
+Wi-Fi credentials go in `Agile/secrets.h`, which is git-ignored. Keep a `secrets.example.h` in the sketch folder with placeholder values.
 
 ## Rules carried over from BTTM
 
@@ -28,5 +28,5 @@ Wi-Fi credentials go in `PLTD/secrets.h`, which is git-ignored. Keep a `secrets.
 ## Flashing a release
 
 ```
-esptool.py --chip esp32s3 --port COMx write_flash 0x0 PLTD.ino.merged.bin
+esptool.py --chip esp32s3 --port COMx write_flash 0x0 Agile.ino.merged.bin
 ```

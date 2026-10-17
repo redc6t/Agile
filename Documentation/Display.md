@@ -1,4 +1,4 @@
-# PLTD Driver Display (TFT), firmware v0.17.0
+# Agile Driver Display (TFT), firmware v0.17.0
 
 The driver display is an ST7789 panel used at **284 × 76 px** (landscape, `setRotation(3)`), driven by `displayTask` on core 1 at 20 Hz. Every screen below was rendered from the firmware's own drawing code by [`Display/render_tft.py`](Display/render_tft.py): same coordinates, strings, colours and text-wrap rules. The font is a monospace stand-in for the Adafruit GFX 5×7 glyphs, so text width and placement match the panel and glyph shapes are approximate. To regenerate, run `python render_tft.py` in `Documentation/Display/`.
 
@@ -49,7 +49,7 @@ Page 5 prints the compiled SSID (`WIFI_SSID`), not the active one, so it still s
 
 ## USB export mode (UP held at power-on)
 
-The NAND is presented to a PC as a read-only FAT16 drive (`LOG_nnnn.CSV` files). The unit must be powered through RAW_BATT, because VBUS does not power PLTD v1.0. Holding OK for 5 s erases every log.
+The NAND is presented to a PC as a read-only FAT16 drive (`LOG_nnnn.CSV` files). The unit must be powered through RAW_BATT, because VBUS does not power Agile v1.0. Holding OK for 5 s erases every log.
 
 | Ready | Erasing |
 |---|---|

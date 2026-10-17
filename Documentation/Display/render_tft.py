@@ -1,4 +1,4 @@
-"""Render every PLTD TFT screen (firmware v0.17.0) to SVG.
+"""Render every Agile TFT screen (firmware v0.17.0) to SVG.
 
 The ST7789 panel is 284x76 after setRotation(3). This script emulates the
 subset of Adafruit GFX the firmware uses (fillScreen, fillRect, drawRect,

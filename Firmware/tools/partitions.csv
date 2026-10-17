@@ -1,5 +1,5 @@
 # Mullaloo Motorsport Engineering
-# 16MB dual-OTA partition table — SHARED by BTTM and PLTD (LapTimer).
+# 16MB dual-OTA partition table — SHARED by BTTM and Agile (LapTimer).
 # Rows verified byte-identical to the table BTTM has been running since
 # v2.7.0. Only the commentary below was corrected (Jul 2026).
 #
@@ -39,7 +39,7 @@
 #   app1     0x410000 .. 0x810000   4096 KB   ota_1 — OTA staging slot
 #   spiffs   0x810000 .. 0x1000000  8128 KB   reserved, unused by both
 #                                             products (BTTM logs to SD,
-#                                             PLTD to external W25N04KV
+#                                             Agile to external W25N04KV
 #                                             SPI NAND)
 #   Contiguous, no gaps, exact 16MB fit.
 #

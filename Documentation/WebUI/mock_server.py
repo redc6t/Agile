@@ -1,4 +1,4 @@
-"""Serve the PLTD web UI (extracted from the firmware source) against mock data.
+"""Serve the Agile web UI (extracted from the firmware source) against mock data.
 
 Used to produce the screenshots in Documentation/WebUI.md. The HTML and
 JavaScript are taken verbatim from the HTML_HEAD / HTML_SCRIPT raw literals
@@ -162,5 +162,5 @@ class H(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print("PLTD web UI mock on http://localhost:%d/" % PORT)
+    print("Agile web UI mock on http://localhost:%d/" % PORT)
     ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()

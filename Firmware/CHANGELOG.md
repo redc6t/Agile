@@ -1,4 +1,4 @@
-# PLTD Firmware Changelog
+# Agile Firmware Changelog
 
 Format: `vMAJOR.MINOR.PATCH - YYYY-MM-DD`. Tag each release in git as `fw-vX.Y.Z`.
 

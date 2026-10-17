@@ -1,4 +1,4 @@
-# PLTD Hardware
+# Agile Hardware
 
 | Path | Contents |
 |---|---|
@@ -10,7 +10,7 @@
 
 ## Naming
 
-`PLTD_vX.Y_BOM.xlsx`, `PLTD_vX.Y_Schematic_Print.pdf`, `PLTD_vX.Y_PCB_Print.pdf`, `PLTD_vX.Y_Gerber.zip`, `PLTD_vX.Y_CPL.csv`.
+`Agile_vX.Y_BOM.xlsx`, `Agile_vX.Y_Schematic_Print.pdf`, `Agile_vX.Y_PCB_Print.pdf`, `Agile_vX.Y_Gerber.zip`, `Agile_vX.Y_CPL.csv`.
 
 Tag each released board in git as `hw-vX.Y`.
 

@@ -1,4 +1,4 @@
-# PLTD Architecture (firmware v0.17.0)
+# Agile Architecture (firmware v0.17.0)
 
 ## Block diagram
 

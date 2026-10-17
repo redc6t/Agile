@@ -1,4 +1,4 @@
-PLTD - GPS Lap Timer & Driver Display
+Agile - GPS Lap Timer & Driver Display
 
 v0.1 (Work in progress)
 - Initial board

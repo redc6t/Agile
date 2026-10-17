@@ -1,6 +1,6 @@
-# PLTD Web Interface, firmware v0.17.0
+# Agile Web Interface, firmware v0.17.0
 
-PLTD serves a single-page web app on port 80 once it has joined Wi-Fi. Open `http://<unit-ip>/`. The IP is on the idle screen, row 5. The page and its JavaScript are compiled into the firmware (`HTML_HEAD` and `HTML_SCRIPT` in PROGMEM). Leaflet 1.9.4 and the map tiles (OpenStreetMap, Esri World Imagery) come from the internet, so the **browser** needs a route out; the unit does not.
+Agile serves a single-page web app on port 80 once it has joined Wi-Fi. Open `http://<unit-ip>/`. The IP is on the idle screen, row 5. The page and its JavaScript are compiled into the firmware (`HTML_HEAD` and `HTML_SCRIPT` in PROGMEM). Leaflet 1.9.4 and the map tiles (OpenStreetMap, Esri World Imagery) come from the internet, so the **browser** needs a route out; the unit does not.
 
 The screenshots below are the real page from the v0.17.0 source, served by [`WebUI/mock_server.py`](WebUI/mock_server.py) with mock data. The circuit geometry is synthetic. The mock does not emulate the WebSocket, so the pit-board status line reads "disconnected — retrying" and the bar runs on its `/data` fallback.
 
@@ -38,7 +38,7 @@ flowchart TB
 ```mermaid
 sequenceDiagram
     participant B as Browser
-    participant U as PLTD
+    participant U as Agile
     B->>U: GET /
     B->>U: WS /ws (open, retry every 2 s)
     B->>U: GET /pitstate, /wifi, /update, /imu, /thr, /logs

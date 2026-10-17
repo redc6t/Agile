@@ -1,12 +1,13 @@
-PLTD FIRMWARE LICENCE (PROPRIETARY)
+AGILE FIRMWARE LICENCE (PROPRIETARY)
 
 Copyright (c) 2026 Pietro Gambarin, Mullaloo Motorsport Engineering.
 All rights reserved.
 
 1. Scope
-   This licence covers the PLTD firmware: all source code, object code and
+   This licence covers the Agile firmware: all source code, object code and
    compiled binaries (including files in Firmware/releases/), and any update
-   distributed for it (the "Firmware").
+   distributed for it (the "Firmware"). Agile was previously named PLTD;
+   any reference to PLTD hardware or firmware means Agile.
 
 2. Ownership
    The Firmware is licensed, not sold. All title, copyright and other
@@ -14,7 +15,7 @@ All rights reserved.
    holder. The source code is confidential and is not published.
 
 3. Permitted use
-   You may download, install and run the Firmware binaries only on PLTD
+   You may download, install and run the Firmware binaries only on Agile
    hardware, for your own use.
 
 4. Restrictions

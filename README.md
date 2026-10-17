@@ -1,6 +1,6 @@
-**PLTD: GPS Lap Timer & Driver Display**
+**Agile: GPS Lap Timer & Driver Display**
 
-GPS lap timer and driver display for circuit racing. PLTD times laps and micro-sectors, records the track outline and the pit lane, fuel bay and pit exit geofences, and shows pit board messages and race-control flags sent from the pit wall on the driver's dash.
+GPS lap timer and driver display for circuit racing. Agile times laps and micro-sectors, records the track outline and the pit lane, fuel bay and pit exit geofences, and shows pit board messages and race-control flags sent from the pit wall on the driver's dash.
 
 Part of the Mullaloo Motorsport Engineering in-car system, alongside [BTTM](https://github.com/redc6t/BTTM) (Brake & Tyre Temperature Monitor) and [CIRTS](https://github.com/redc6t/CIRTS) (CAN Infrared Temperature Sensor). Consumed by [PWSM](https://github.com/redc6t/PWSM_Pit_Wall_Stategy_Manager) (Pit Wall Strategy Manager).
 
@@ -22,16 +22,16 @@ Part of the Mullaloo Motorsport Engineering in-car system, alongside [BTTM](http
 ```mermaid
 flowchart LR
     subgraph Car
-        GNSS[MAX-F10S GNSS<br/>10 Hz] --> PLTD
-        IMU[LSM6DSV16X IMU<br/>240 Hz] --> PLTD
-        BTN[OK / UP / DOWN] --> PLTD
-        PLTD[ESP32-S3<br/>PLTD firmware] --> TFT[284×76 TFT<br/>driver display]
-        PLTD --> NAND[(512 MB NAND<br/>session logs)]
+        GNSS[MAX-F10S GNSS<br/>10 Hz] --> Agile
+        IMU[LSM6DSV16X IMU<br/>240 Hz] --> Agile
+        BTN[OK / UP / DOWN] --> Agile
+        Agile[ESP32-S3<br/>Agile firmware] --> TFT[284×76 TFT<br/>driver display]
+        Agile --> NAND[(512 MB NAND<br/>session logs)]
     end
-    PLTD <-->|Wi-Fi: HTTP + WebSocket| AP((Trackside AP))
+    Agile <-->|Wi-Fi: HTTP + WebSocket| AP((Trackside AP))
     AP <--> WEB[Browser web UI]
     AP <--> PWSM[PWSM pit wall]
-    PLTD -.->|USB export mode| PC[PC: LOG_nnnn.CSV]
+    Agile -.->|USB export mode| PC[PC: LOG_nnnn.CSV]
 ```
 
 **How a session runs**
@@ -118,7 +118,7 @@ Parts as used by firmware v0.17.0. All PCB designs are custom. See [Hardware](Ha
 **Repository layout**
 
 ```text
-PLTD/
+Agile/
 ├── README.md                 this file
 ├── Documentation/
 │   ├── Architecture.md       block diagram, tasks, timing logic, storage
@@ -135,7 +135,7 @@ PLTD/
 │   ├── Flowchart/            state machine diagrams
 │   └── Manuals/              driver / pit crew / installation manuals
 ├── Firmware/
-│   ├── PLTD/                 Arduino sketch (PLTD.ino)
+│   ├── Agile/                Arduino sketch (Agile.ino)
 │   ├── lib/                  local libraries
 │   ├── tools/                partitions.csv, host helpers
 │   ├── releases/             tagged binaries
@@ -165,7 +165,7 @@ Designed for circuit racing, track days and motorsport testing, giving entry-lev
 |---|---|
 | Hardware (schematics, PCB, fabrication files, enclosure) | [CERN-OHL-S-2.0](https://ohwr.org/cern_ohl_s_v2.txt) |
 | Documentation (including the firmware pseudocode and diagrams) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
-| Firmware (source and binaries) | Proprietary, all rights reserved. The source is not published; binaries are free to use on PLTD hardware. See [Firmware/LICENSE](Firmware/LICENSE). |
+| Firmware (source and binaries) | Proprietary, all rights reserved. The source is not published; binaries are free to use on Agile hardware. See [Firmware/LICENSE](Firmware/LICENSE). |
 
 See [LICENSE](LICENSE) for details.
 

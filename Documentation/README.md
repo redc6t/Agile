@@ -1,4 +1,4 @@
-# PLTD Documentation
+# Agile Documentation
 
 | Document | Contents |
 |---|---|
