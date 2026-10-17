@@ -1,4 +1,4 @@
-**Agile: GPS Lap Timer & Driver Display**
+**Agile - Predictive Lap Timer with micro-sector analysis**
 
 GPS lap timer and driver display for circuit racing. Agile times laps and micro-sectors, records the track outline and the pit lane, fuel bay and pit exit geofences, and shows pit board messages and race-control flags sent from the pit wall on the driver's dash.
 

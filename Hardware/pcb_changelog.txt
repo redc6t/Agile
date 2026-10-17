@@ -1,4 +1,4 @@
-Agile - GPS Lap Timer & Driver Display
+Agile - Predictive Lap Timer with micro-sector analysis
 
 v0.1 (Work in progress)
 - Initial board
