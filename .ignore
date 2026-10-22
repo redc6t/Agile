@@ -1,0 +1,3 @@
+# Read by ripgrep-based search tools only (git ignores this file's rules).
+# Un-hides the git-ignored Sauce/ folder so code search still covers it.
+!Sauce/
