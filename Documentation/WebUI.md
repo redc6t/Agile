@@ -25,6 +25,7 @@ flowchart TB
     C --> C1[Circuits list]
     C --> C2[Zone editor map + tools]
     C --> C3[WiFi]
+    C --> C3b[Display Brightness, v0.18.0]
     C --> C4[Diagnostics]
     C --> C5[Reset Learned State]
     C --> C6[Detection Thresholds]
@@ -110,6 +111,10 @@ Workflow:
 ### WiFi
 
 Shows the SSID, IP, mode (dhcp/static), RSSI, and whether the credentials came from NVS or the compiled default. **Save & Reconnect** stores new credentials and reconnects at once. **Use Defaults** clears NVS. If the IP changes, reload the page from the new address.
+
+### Display Brightness (v0.18.0)
+
+TFT backlight, 10–100 %. Dragging the slider previews the level live (`POST /brightness {"level":N,"save":false}`, at most every 120 ms) without writing flash; releasing it, or pressing **Day** (100), **Dusk** (50) or **Night** (20), saves to NVS `lt_disp`. The saved level is applied at boot before the first screen is drawn. On a board without the [backlight mod](TechnicalSpec.md#741-backlight-dimming-mod-fw-v0180) the card reads "Backlight control not fitted on this unit" and the display stays at full brightness.
 
 ### Diagnostics
 

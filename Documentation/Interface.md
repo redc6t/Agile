@@ -43,6 +43,7 @@ The queue holds 4 messages. When it is full the oldest unlatched message is repl
 | `GET /wifi` | `{ssid,connected,ip,ip_mode,rssi,from_nvs}` |
 | `GET /imu` | `{roll,pitch,yaw,busy,mount,suggest,conf,n}` degrees |
 | `GET /thr` | `{brake,corner,accel,mindur}` |
+| `GET /brightness` | `{available,level,min,pin}`. v0.18.0. `available` is false on a board without the backlight mod. `?level=N` sets N (clamped 10–100) and saves it |
 | `GET /logs` | `{cur,full,used_pages,total_pages,sessions:[{id,bytes}]}` |
 | `GET /log?id=N` | `LOG_nnnn.CSV` as a streamed `text/csv` attachment |
 | `GET /update`, `GET /ota` | OTA status: `{version,fw,user,auth,sketch_size,free_sketch,free_space,running,running_addr,running_size,target,target_size,ota_capable,ready,why,active,pct}` (no-store) |
@@ -59,6 +60,7 @@ All JSON bodies; replies are `{"ok":true}` or `{"ok":false,"error":…}`.
 | `POST /sf/set` | `{lat,lon}` | Legacy point S/F; also erases the stored sector map |
 | `POST /nuke` | `{confirm:"ERASE",sf:bool}` | Learned-state reset |
 | `POST /thr` | `{brake,corner,accel,mindur}` | Thresholds (0.05–2.0 g, 50–3000 ms) |
+| `POST /brightness` | `{level,save}` | v0.18.0. Backlight 10–100 % (clamped). `save:false` is a live preview with no NVS write; `save` defaults to true. Replies with the `GET /brightness` JSON, or 400 `{"ok":false,"error":"parse"}` |
 | `POST /imu/level` | – | Capture roll/pitch from gravity (409 if busy) |
 | `POST /imu/yaw` | `{yaw}` | Yaw offset, −180…180° |
 | `POST /wifi` | `{ssid,pass}` | Save credentials to NVS and reconnect |

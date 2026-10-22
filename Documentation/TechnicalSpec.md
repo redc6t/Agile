@@ -152,8 +152,9 @@ Two trace buffers of 4500 points × 12 B (reference and current lap). Promotion 
 | 41 | IMU_SDO | in | FSPI MISO from LSM6DSV16X SDO/SA0 |
 | 42 | IMU_CS | out | IMU chip select |
 | 47 | TFT_RESET | out | TFT reset |
+| 48 | (mod wire) TFT_BL | out | Backlight PWM to the low-side MOSFET gate, fw v0.18.0 with the [backlight mod](#741-backlight-dimming-mod-fw-v0180). NC on a stock v1.1 |
 | 43 / 44 | ESP_TXD / ESP_RXD | io | UART0 (U0TXD / U0RXD), on ESP_PROG_BOTTOM |
-| 3, 4, 9, 13, 15, 16, 35–37, 39, 45, 46, 48 | NC | – | Unused |
+| 3, 4, 9, 13, 15, 16, 35–37, 39, 45, 46 | NC | – | Unused |
 
 GPIO 45 and 46 are strapping pins and input-only in this design. GPIO 35–37 are taken by the octal PSRAM.
 
@@ -215,11 +216,32 @@ CSV columns: `iTOW, lat_deg, lon_deg, speed_kph, sats, pdop, fix, along_g, lat_g
 | Resolution | 284 × 76 px, driven as `tft.init(76, 284)`, rotation 3, no inversion |
 | Interface | HSPI write-only: SCK 5, SDI 6, CS 14, DC 21, RST 47 |
 | Connector | 8-pin header: 1 GND, 2 VIN 3V3, 3 SCK, 4 SDI, 5 RST, 6 DC, 7 CS, 8 LED |
-| Backlight | LED pin tied to GND on v1.1; no firmware dimming |
+| Backlight | LED pin tied to GND on a stock v1.1 (always full on). With the mod below, fw v0.18.0 dims it 10–100 % from the web UI |
 | Refresh | `displayTask` on core 1, 20 Hz, dirty-checked elements |
 | Layout | Delta bar y 0–27, info y 29–50, sector rows y 52–73 |
 
 The TFT and NAND share HSPI; all three chip selects are driven high before either bus is started.
+
+#### 7.4.1 Backlight dimming mod (fw v0.18.0)
+
+The TFT header's pin 8 (LED) is the backlight cathode return, so the switch goes on the low side. Cut pin 8's link to GND and fit an N-channel MOSFET:
+
+| MGSF1N03LT1G pin | Connects to |
+|---|---|
+| 3 Drain | TFT header pin 8 (LED) |
+| 2 Source | GND |
+| 1 Gate | GPIO48 (WROOM-1 pad 25, next to TFT_RESET on pad 24) through 100 Ω, plus 10 kΩ to 3V3 |
+
+| Item | Value |
+|---|---|
+| Polarity | Active-high: GPIO high = backlight on (`TFT_BL_ACTIVE_LOW 0`) |
+| Fail-safe | The 10 kΩ gate pull-up keeps the backlight full on in reset, while booting and on an unflashed unit |
+| Detection | At boot GPIO48 is read with its internal pull-down on. The 10 kΩ pull-up reads high, so the mod counts as fitted; an open pin reads low and the web card reports "not fitted". The pull-up must be 15 kΩ or less |
+| PWM | LEDC 20 kHz, 10 bit, duty = level², level 10–100 % |
+| Storage | NVS `lt_disp` / `bl_pct`, applied before `tft.init()` |
+| Bench check | At 100 %, drain–source drop should be tens of mV. Hundreds of mV means that unit is not fully enhanced at 3.3 V |
+
+The MGSF1N03LT1G is specified at Vgs 4.5 V (0.145 Ω max) with Vgs(th) 1.0–2.4 V, is ESD class 0 (125 V HBM), and is discontinued. On a PCB revision use an FDN337N or AO3400A, which share the SOT-23 G/S/D pinout.
 
 ### 7.5 USB-C (J4)
 
@@ -368,7 +390,7 @@ The fabrication BOM and CPL go in `Hardware/Fabrication/v1.1/` once exported.
 | 5 | Schematic page 4 (BATT) | Marked TBD. |
 | 6 | EN reset timing | No RC capacitor on ESP_EN shown (R17 pull-up only). Espressif recommends 1 µF on EN. |
 | 7 | CAN termination | No 120 Ω on board; the bus must be terminated externally. |
-| 8 | TFT backlight | LED pin hard-wired to GND; brightness cannot be controlled. |
+| 8 | TFT backlight | LED pin hard-wired to GND on the PCB. Dimming needs the [§7.4.1](#741-backlight-dimming-mod-fw-v0180) rework (fw v0.18.0); a PCB revision should route a SOT-23 N-MOSFET and GPIO48 on the board. |
 | 9 | BT1 | Cell type and holder part not given on the schematic. |
 | 10 | Power figures | Input voltage range, current draw and thermal behaviour not yet characterised. |
 | 11 | Fabrication outputs | Gerber, BOM and CPL for v1.1 not yet in `Hardware/Fabrication/`. |
