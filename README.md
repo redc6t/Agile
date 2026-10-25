@@ -4,9 +4,10 @@ GPS lap timer and driver display for circuit racing. Agile times laps and micro-
 
 Part of the Mullaloo Motorsport Engineering in-car system, alongside [BTTM](https://github.com/redc6t/BTTM) (Brake & Tyre Temperature Monitor) and [CIRTS](https://github.com/redc6t/CIRTS) (CAN Infrared Temperature Sensor). Consumed by [PWSM](https://github.com/redc6t/PWSM_Pit_Wall_Stategy_Manager) (Pit Wall Strategy Manager).
 
-<p align="center">
-  <img src="Documentation/Photos/agile_v1.0.jpg" alt="Agile v1.0: angled 3D-printed enclosure with the 284×76 TFT and OK / UP / DOWN buttons" width="720">
-</p>
+| | |
+|---|---|
+| <img src="Documentation/Photos/agile_v1.0_open_mainboard.jpg" alt="Inside the v1.0 enclosure: main board with ESP32-S3 and GNSS behind the connector panel" width="400"> | <img src="Documentation/Photos/agile_v1.0_open_display.jpg" alt="Display board in its angled mount inside the open v1.0 enclosure" width="400"> |
+| Inside v1.0: the main board with the ESP32-S3 and u-blox GNSS behind the connector panel. | The display board in its angled mount, from inside the open v1.0 enclosure. |
 
 ![Racing dash: gaining 0.8 s](Documentation/Display/screens/race_gaining.svg)
 
@@ -107,10 +108,9 @@ Full pseudocode of the firmware: [Documentation/Pseudocode.md](Documentation/Pse
 
 **Hardware**
 
-| | |
-|---|---|
-| <img src="Documentation/Photos/agile_v1.0_open_mainboard.jpg" alt="Inside the v1.0 enclosure: main board with ESP32-S3 and GNSS behind the connector panel" width="400"> | <img src="Documentation/Photos/agile_v1.0_open_display.jpg" alt="Display board in its angled mount inside the open v1.0 enclosure" width="400"> |
-| Inside v1.0: the main board with the ESP32-S3 and u-blox GNSS behind the connector panel. | The display board in its angled mount, from inside the open v1.0 enclosure. |
+<p align="center">
+  <img src="Documentation/Photos/agile_v1.0.jpg" alt="Agile v1.0: angled 3D-printed enclosure with the 284×76 TFT and OK / UP / DOWN buttons" width="720">
+</p>
 
 | Component | Part | Interface |
 |---|---|---|
