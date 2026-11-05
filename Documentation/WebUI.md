@@ -86,6 +86,8 @@ The flag buttons never toggle themselves. They send the intent and repaint from 
 
 ![Config tab](WebUI/img/config_tab.png)
 
+Since v0.20.0 the tab has two parts: the **Circuits** list and zone editor map on top, and **Device Settings** below as a grid of panels (WiFi, Display Brightness, IMU Orientation, Detection Thresholds, Logs, Diagnostics, Firmware, Reset Learned State). The grid shows four panels across on a laptop, two on a tablet and one on a phone. The screenshot above predates this layout.
+
 ### Circuits and zone editor
 
 A **circuit** is one object: the S/F line plus the pit and fuel zones, stored in NVS (`lt_geo`, one JSON string per circuit, about 3.9 KB maximum each).
@@ -96,7 +98,7 @@ A **circuit** is one object: the S/F line plus the pit and fuel zones, stored in
 | Pit Entry Line | 1 | 2-point line | RUNNING → PIT ENTRY |
 | Pit Exit Line | 2 | 2-point line | → PIT EXIT |
 | Pits Zone | 3 | polygon (3+ points) | PIT ENTRY → PITS, PITS → PIT EXIT |
-| Fuel Zone | 4 | polygon | PITS ↔ FUELLING |
+| Fuel Zone | 4 | polygon | FUELLING while inside, from any state (v0.20.0); on leaving → PITS if inside the pits polygon, else RUNNING |
 | Custom | 5 | polygon | full-screen label on the TFT while inside |
 
 Workflow:

@@ -500,10 +500,12 @@ updateCarState(lat, lon, current):        // every valid fix, geoMutex take with
         PIT_ENTRY_LINE: > 8 m from line → arm; within 8 m while armed and RUNNING → PIT_ENTRY
         PIT_EXIT_LINE:  > 8 m → arm; within 8 m while armed and (PITS or PIT_ENTRY) → PIT_EXIT
         PITS polygon:   inside while PIT_ENTRY → PITS; outside while PITS → PIT_EXIT
-        FUEL polygon:   inside while PITS → FUELLING; outside while FUELLING → PITS
+        FUEL polygon:   note inside (resolved after the loop)
         CUSTOM polygon: inside → display override with the zone label (first match wins)
         SF_LINE:        ignored here (lap state machine)
     if current = PIT_EXIT and outside every PITS polygon → RUNNING
+    v0.20.0: inside any FUEL polygon → FUELLING from ANY state (wins over a line on the same fix)
+             FUELLING and outside every FUEL polygon → PITS if inside a PITS polygon, else RUNNING
 ```
 
 ```mermaid
@@ -512,8 +514,10 @@ stateDiagram-v2
     RUNNING --> PIT_ENTRY: within 8 m of armed pit-entry line
     PIT_ENTRY --> PITS: inside Pits polygon
     PIT_ENTRY --> PIT_EXIT: within 8 m of armed pit-exit line
+    RUNNING --> FUELLING: inside Fuel polygon (any state, v0.20.0)
     PITS --> FUELLING: inside Fuel polygon
-    FUELLING --> PITS: leaves Fuel polygon
+    FUELLING --> PITS: leaves Fuel polygon, inside Pits polygon
+    FUELLING --> RUNNING: leaves Fuel polygon, outside Pits polygons
     PITS --> PIT_EXIT: leaves Pits polygon / crosses exit line
     PIT_EXIT --> RUNNING: outside every Pits polygon
 ```
