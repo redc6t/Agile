@@ -2,6 +2,11 @@
 
 Format: `vMAJOR.MINOR.PATCH - YYYY-MM-DD`. Tag each release in git as `fw-vX.Y.Z`.
 
+## v0.20.1 - unreleased (compiles, not run on hardware)
+- Finish sector: the stretch from the last IMU boundary to S/F is now a timed sector, closed by the S/F crossing, with its own split, colour, delta and `SEC ... at S/F` log row. LOG_0002 showed 1.4–1.9 s per lap that was never compared, so sector times summed about 1.5 s short of the lap. Maps saved by older versions get it appended on load; the sector strip shows one more cell.
+- `geo_label` log column is empty outside custom zones (it kept the last custom label for the rest of the session).
+- v0.20.0 confirmed on track (LOG_0002, Craigie): fuel zone entered twice from RUNNING, boot rows present, every boundary passed within 0.1–1.9 m.
+
 ## v0.20.0 - unreleased (compiles, not run on hardware)
 - Fuel zone triggers from any car state: inside the polygon is FUELLING (REFUELING on the TFT), leaving it returns to PITS if still inside the pits polygon, else RUNNING. It used to fire only from PITS, so a parked test never showed it. Entry and exit are logged as `GEO/INFO` rows.
 - Sector boundaries complete at the car's closest approach to the boundary point, time-interpolated between fixes, instead of on entering a 30 m circle. LOG_0028 showed sector 1 about 2 s green on every lap and a matching loss on the run to S/F. Stored sector maps stay valid.

@@ -79,7 +79,8 @@ setup():
 
     geoMutex ← create mutex                             // MUST precede geoParseAndLoad (v0.13 fix)
     loadSFLine(); loadBestLap()                         // legacy point S/F + best lap from NVS
-    g_mapAvailable ← smapLoad()                         // stored sector map, CRC-checked
+    g_mapAvailable ← smapLoad()                         // stored sector map, CRC-checked;
+                                                        // v0.20.1: appends the finish sector to older maps
 
     active ← geoGetActive()
     if active empty and _index holds exactly one circuit: adopt it as active
@@ -337,23 +338,31 @@ lapTask():  every 10 ms (100 Hz)
             else: misses++; after 3 misses liveDeltaValid ← false
 
         // sector completion with lookahead (BUG-02)
-        if valid fix and movedFromStart and sectors remain and cooldown elapsed:
-            lookEnd ← currentSector + 1 + 3   (all remaining if reference progress shows a skip)
-            matched ← first boundary j in [currentSector, lookEnd) within 30 m
+        // v0.20.1: the last sector is the FINISH sector (boundary at the S/F point);
+        // it is excluded here and closed by the S/F crossing below
+        timedEnd ← sectorCount − 1 if the last boundary is within 3 m of S/F, else sectorCount
+        if previous fix ≤ 1 s old and movedFromStart and currentSector < timedEnd and cooldown elapsed:
+            lookEnd ← min(timedEnd, currentSector + 1 + 3)   (timedEnd if reference progress shows a skip)
+            matched ← first boundary j in [currentSector, lookEnd) whose closest approach
+                      lies on the segment previous fix → this fix, within 30 m laterally
             if matched:
+                passTOW ← previous iTOW + fraction × segment time        // v0.20.0
+                closeSectorsTo(matched, passTOW):
                 mark skipped sectors (currentSector..matched−1) gray, no time
-                sectorElapsed ← iTOW − sectorStartTOW
+                sectorElapsed ← passTOW − sectorStartTOW
                 refDurSum ← Σ ref_dur of spanned sectors
                 delta ← sectorElapsed − refDurSum
                 gray if: any spanned ref_dur < minRefDurMs, not rejoined since pits,
                          refDurSum = 0, or |delta| > DELTA_SANITY_MS
                 colour ← gray(0) | green(1) if delta < −10 ms | red(2) if delta > +10 ms
                 if not gray: cumulativeDelta += delta
-                queue CAN sector event; currentSector ← matched + 1
+                queue CAN sector event; sysLogEvent SEC row; currentSector ← matched + 1
 
         // lap complete
         if sfCrossed and movedFromStart and lap > 30 s:
             lapMs ← crossTOW − lapStartTOW
+            if finish sector exists and not yet closed:
+                closeSectorsTo(last, crossTOW)                   // v0.20.1, SEC row "at S/F"
             if not lapPitted and better than best: saveBestLap; sysLogEvent "NEW BEST"
             promote ← not lapPitted and (no reference or lapMs < refLapMs)
             if promote and > 50 trace points:
@@ -433,6 +442,9 @@ synthesiseSectors(lapMs, out):
     // 5. timebase
     boundary time ← trace[candidate.ref_idx].elapsed; durations = differences
     merge any sector shorter than spacingMs into its neighbour
+    // 5b. v0.20.1 finish sector
+    drop trailing boundaries closer than spacingMs to lapMs (or past MAX_SECTORS − 1)
+    append boundary at the S/F point, ref time lapMs           (fallback: 3rd sector is it)
 
     // 6. confidence (0..100)
     conf ← 40·min(1, count/10) + 30·max(0, 1 − CV(durations)) + 30·min(1, gnssHz/10)
@@ -451,7 +463,8 @@ flowchart LR
     E -->|&lt; 3 survivors| F[Fallback: 3 equal-time<br/>sectors, conf 20%]
     E --> G[Cap 32 + time-bin balance]
     G --> H[Timebase from trace<br/>merge short sectors]
-    H --> I[Confidence score]
+    H --> H2[Append finish sector<br/>at S/F]
+    H2 --> I[Confidence score]
     I --> J[smapSave to NVS<br/>approve overlay 15 s]
 ```
 
