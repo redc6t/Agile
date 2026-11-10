@@ -2,6 +2,16 @@
 
 Format: `vMAJOR.MINOR.PATCH - YYYY-MM-DD`. Tag each release in git as `fw-vX.Y.Z`.
 
+## v0.21.0 - unreleased (not run on hardware)
+Engineer view for running the car from the pits. Web-side visibility only: recon detection, synthesis, sector timing, delta and geofence logic are unchanged.
+- Live tab: **Driver Display** mirror (what the TFT shows now, from the display owner stack), **Recon & Sector Map** card (state, live candidate feed with counts and peaks per type, verdict with style, sector count, confidence and synthesis breakdown) and a live **Event Log** of every `sysLogEvent` row.
+- Remote OK: **Keep recon map** (approve overlay) and **Use stored map** (idle MAP prompt after a reboot) via `POST /approve`. **Discard & redo recon** uses the existing `/nuke` (S/F kept): the next S/F crossing starts a new recon lap.
+- Config tab: read-only **Sector Map**: reference lap, recon candidates coloured by type (faded below the synthesis gate), numbered boundaries, finish sector, optional stored map, and a table of which event each boundary came from.
+- New `GET /recon`, `GET /events`, `POST /approve`. `sysLogEvent` rows are also copied to a 64-row PSRAM ring.
+- New `EVT/INFO` log row per recon candidate (type, peak, duration, onset time and position), so a missed corner can be explained from the CSV.
+- `candidateCount` is incremented after the candidate is filled, so a web read never sees a half-written entry.
+- Page size grows from ~69 KB to ~93 KB.
+
 ## v0.20.1 - unreleased (compiles, not run on hardware)
 - Finish sector: the stretch from the last IMU boundary to S/F is now a timed sector, closed by the S/F crossing, with its own split, colour, delta and `SEC ... at S/F` log row. LOG_0002 showed 1.4–1.9 s per lap that was never compared, so sector times summed about 1.5 s short of the lap. Maps saved by older versions get it appended on load; the sector strip shows one more cell.
 - `geo_label` log column is empty outside custom zones (it kept the last custom label for the rest of the session).

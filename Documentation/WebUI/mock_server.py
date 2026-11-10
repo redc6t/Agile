@@ -116,7 +116,104 @@ def data():
     }
 
 
+# --- v0.21.0 engineer view: a recon lap replayed in real time -------------
+# 0-8 s IDLE at the line, 8-48 s RECON with candidates appearing along the
+# loop, then RACING with a 15 s approve window. POST /nuke restarts it,
+# POST /approve?a=keep closes the window.
+import time
+
+SIM = {"t0": time.time(), "kept": False}
+EV_TYPES = [1, 2, 3]                        # brake, corner, accel
+
+
+def sim_candidates(upto_s):
+    out = []
+    for k in range(66):
+        on = 600 + k * 600                  # one every 0.6 s of lap time
+        if on / 1000.0 > upto_s:
+            break
+        t = EV_TYPES[k % 3]
+        la, lo = REF[int(on / 40000.0 * 800) % 800]
+        pk = [0, 0.95, 1.30, 0.42][t] * (0.35 + 0.65 * abs(math.sin(k * 1.7)))
+        out.append({"i": k + 1, "t": t, "la": la, "lo": lo, "on": on,
+                    "du": 180 + (k * 37) % 900, "pk": round(pk, 3)})
+    return out
+
+
+def recon():
+    el = time.time() - SIM["t0"]
+    q = {}
+    if "?" in H.cur_path:
+        for kv in H.cur_path.split("?", 1)[1].split("&"):
+            k, _, v = kv.partition("=")
+            q[k] = v
+    if el < 8:
+        ls, lap, lel, cands = 0, 0, 0, []
+    elif el < 48:
+        ls, lap, lel, cands = 1, 1, int((el - 8) * 1000), sim_candidates(el - 8)
+    else:
+        ls, lap, lel, cands = 2, 2 + int((el - 48) // 40), int(((el - 48) % 40) * 1000), sim_candidates(40)
+    ap = ls == 2 and (el - 48) < 15 and not SIM["kept"]
+    bounds = []
+    if ls == 2:
+        strong = [c for c in cands if c["pk"] >= 0.45][::3][:8]
+        for j, c in enumerate(strong):
+            rd = c["on"] - (strong[j - 1]["on"] if j else 0)
+            bounds.append({"la": c["la"], "lo": c["lo"], "rt": c["on"], "rd": rd})
+        last = bounds[-1]["rt"] if bounds else 0
+        bounds.append({"la": REF[0][0], "lo": REF[0][1], "rt": 40000, "rd": 40000 - last})
+    frm = int(q.get("from", 0))
+    page = cands[frm:frm + 64]
+    r = {"ls": ls, "nt": 0, "own": 2 if ap else (5 if ls == 0 else 0), "lap": lap, "el": lel,
+         "spd": 0 if ls == 0 else 118.0, "cs": "RUNNING", "ap": ap,
+         "asl": max(0, 15 - int(el - 48)) if ap else 0, "asec": len(bounds), "aconf": 82,
+         "lvs": False, "sfv": True, "map": ls == 2, "mapn": len(bounds), "mapc": 82,
+         "sc": len(bounds), "p95": 0.912, "gate": 0.45, "n": len(cands),
+         "nb": sum(c["t"] == 1 for c in cands), "nc": sum(c["t"] == 2 for c in cands),
+         "na": sum(c["t"] == 3 for c in cands),
+         "pb": max([c["pk"] for c in cands if c["t"] == 1] or [0]),
+         "pc": max([c["pk"] for c in cands if c["t"] == 2] or [0]),
+         "pa": max([c["pk"] for c in cands if c["t"] == 3] or [0]),
+         "sty": "TRACK" if ls == 2 else "", "tl1": "", "tl2": "", "pm": "", "gl": "",
+         "ev": page, "next": frm + len(page)}
+    if "b" in q:
+        r["b"] = bounds
+        r["sm"] = bounds
+        r["sf"] = [REF[0][0], REF[0][1]]
+    return r
+
+
+EVENTS = []
+
+
+def events():
+    el = time.time() - SIM["t0"]
+    want = [("SYS", "INFO", "boot v0.21.0 imu=1 gnss=1 log=1 nvs_wifi=0")]
+    if el > 8:
+        want.append(("LAP", "INFO", "RECON lap started"))
+    for c in sim_candidates(min(40, max(0, el - 8))):
+        want.append(("EVT", "INFO", "recon cand %d %s peak %.3fG %dms at %dms" %
+                     (c["i"], ["", "BRAKE", "CORNER", "ACCEL"][c["t"]], c["pk"], c["du"], c["on"])))
+    if el > 48:
+        want.append(("SYNTH", "INFO", "lap 1975m 40000ms | target 13 | cand 66 gate 0.450 | FINAL 9 conf 82%"))
+        want.append(("LAP", "INFO", "recon done 40000ms 9 sectors conf 82%"))
+    if el > 60:
+        want.append(("SEC", "INFO", "lap 2 s1 6410/6520ms -110 GREEN lat 0.8m"))
+    while len(EVENTS) < len(want):
+        src, sev, txt = want[len(EVENTS)]
+        EVENTS.append("# m=%d %s/%s %s" % (int(el * 1000), src, sev, txt))
+    since = 0
+    if "since=" in H.cur_path:
+        since = int(H.cur_path.split("since=")[1].split("&")[0])
+    if since > len(EVENTS):
+        since = 0
+    rows = [{"s": i + 1, "r": EVENTS[i]} for i in range(since, min(len(EVENTS), since + 24))]
+    return {"head": len(EVENTS), "rows": rows, "next": rows[-1]["s"] if rows else since}
+
+
 ROUTES = {
+    "/recon": recon,
+    "/events": events,
     "/data": data,
     "/refpath": lambda: [{"lat": a, "lon": b} for a, b in REF],
     "/geozones": lambda: {"zones": ZONES},
@@ -142,7 +239,27 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    cur_path = ""
+
+    def do_POST(self):
+        path = self.path.split("?")[0]
+        n = int(self.headers.get("Content-Length") or 0)
+        if n:
+            self.rfile.read(n)
+        if path == "/nuke":
+            SIM["t0"], SIM["kept"] = time.time(), False
+            del EVENTS[:]
+        elif path == "/approve" and "a=keep" in self.path:
+            SIM["kept"] = True
+        body = b'{"ok":true}'
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self):
+        H.cur_path = self.path
         path = self.path.split("?")[0]
         if path == "/":
             body = (HTML_HEAD + HTML_SCRIPT.replace("</body>", HOOK + "</body>")).encode()

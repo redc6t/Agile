@@ -8,6 +8,17 @@ The screenshots below are the real page from the v0.17.0 source, served by [`Web
 python Documentation/WebUI/mock_server.py path/to/LapTimer_v0_17_0.ino 8765
 ```
 
+## v0.21.0 engineer view
+
+For running the car from the pits with nobody in the car who knows the unit:
+
+- **Live tab, top:** Driver Display mirror. It resolves the same owner stack as the TFT (toast, pit message, approve, car state, custom zone, idle notice, racing dash) and shows the text the driver sees, refreshed every second.
+- **Live tab, Recon & Sector Map card:** lap state and what it means, recon candidates as they are detected (count and peak per type, last 15 events), and after the recon lap the verdict (style, sector count, confidence, synthesis breakdown). Buttons: **Keep recon map**, **Use stored map** (the driver's OK on the approve screen and on the idle MAP prompt) and **Discard & redo recon** (learned-state reset with the S/F line kept; the next crossing starts a new recon lap).
+- **Live tab, Event Log:** every `sysLogEvent` row as it is written (`GET /events`), with filters for SEC, EVT and SYS vitals rows.
+- **Config tab, Sector Map (read-only):** reference lap, every recon candidate (colour = type, size = peak G, faded = below the synthesis gate) and the numbered sector boundaries, with a table of the event each boundary came from. Refreshes every 5 s while the tab is open.
+
+The mock server replays a recon lap for these: IDLE for 8 s, a 40 s recon lap, then the approve window. `POST /nuke` restarts it.
+
 ## Page structure
 
 ```mermaid

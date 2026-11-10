@@ -46,6 +46,8 @@ The queue holds 4 messages. When it is full the oldest unlatched message is repl
 | `GET /brightness` | `{available,level,min,pin}`. v0.18.0. `available` is false on a board without the backlight mod. `?level=N` sets N (clamped 10–100) and saves it |
 | `GET /logs` | `{cur,full,used_pages,total_pages,sessions:[{id,bytes}]}` |
 | `GET /log?id=N` | `LOG_nnnn.CSV` as a streamed `text/csv` attachment |
+| `GET /recon[?from=N][&b=1]` | v0.21.0. Engineer view. `{ls,nt,own,lap,el,spd,cs,ap,asl,asec,aconf,lvs,sfv,map,mapn,mapc,sc,p95,gate,n,nb,nc,na,pb,pc,pa,sty,tl1,tl2,pm,gl,ev:[{i,t,la,lo,on,du,pk}],next}`. `ls` lap state, `nt` idle notice (1 recon aborted, 2 map prompt, 3 map loaded, 4 low events), `own` display owner (0 racing dash, 1 pit message, 2 approve, 3 car state, 4 custom zone, 5 idle, 7 OTA, 8 toast, 9 OK held, 10 reset armed), `ev` recon candidates from index `from` (64 per reply; resume at `next`; `t` 1 brake, 2 corner, 3 accel; `on` lap ms at onset, `du` ms, `pk` g). `b=1` adds `b:[{la,lo,rt,rd}]` live sector boundaries, `sm:[…]` the stored NVS map and `sf:[lat,lon]` |
+| `GET /events?since=N` | v0.21.0. `{head,rows:[{s,r}],next}`: `sysLogEvent` rows newer than seq `N` from a 64-row RAM ring, 24 per reply. `r` is the CSV comment row (`# m=<uptime ms> SRC/SEV text`). A `since` beyond `head` (unit restarted) restarts from the oldest row held |
 | `GET /update`, `GET /ota` | OTA status: `{version,fw,user,auth,sketch_size,free_sketch,free_space,running,running_addr,running_size,target,target_size,ota_capable,ready,why,active,pct}` (no-store) |
 
 ### Write
@@ -59,6 +61,7 @@ All JSON bodies; replies are `{"ok":true}` or `{"ok":false,"error":…}`.
 | `POST /geo/delete` | `{name}` | Delete a circuit |
 | `POST /sf/set` | `{lat,lon}` | Legacy point S/F; also erases the stored sector map |
 | `POST /nuke` | `{confirm:"ERASE",sf:bool}` | Learned-state reset |
+| `POST /approve?a=keep\|usemap` | – (query) | v0.21.0. The driver's short OK, from the web. `keep` closes the recon approve overlay (the map is already in use); `usemap` accepts the stored map at the idle MAP prompt. Ignored outside those contexts; never touches a reset. 400 on any other `a` |
 | `POST /thr` | `{brake,corner,accel,mindur}` | Thresholds (0.05–2.0 g, 50–3000 ms) |
 | `POST /brightness` | `{level,save}` | v0.18.0. Backlight 10–100 % (clamped). `save:false` is a live preview with no NVS write; `save` defaults to true. Replies with the `GET /brightness` JSON, or 400 `{"ok":false,"error":"parse"}` |
 | `POST /imu/level` | – | Capture roll/pitch from gravity (409 if busy). v0.19.0: if the unit reads upside down it flips the orientation, saves the trim and reboots (only in `LAP_IDLE` and at ≤ 5 km/h) |
