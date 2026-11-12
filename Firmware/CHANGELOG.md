@@ -2,6 +2,11 @@
 
 Format: `vMAJOR.MINOR.PATCH - YYYY-MM-DD`. Tag each release in git as `fw-vX.Y.Z`.
 
+## v0.21.1 - unreleased (not compiled, not run on hardware)
+- Pits zone triggers from RUNNING as well as PIT ENTRY: inside any pits polygon is PITS, so the pit entry line is optional. It used to fire only from PIT ENTRY, so a circuit without an entry line, or a car that booted in the garage, stayed RUNNING in the pits. Not from PIT EXIT, which still holds until the car is clear of every pits polygon. Entry and exit are logged as `GEO/INFO` rows.
+- With two pits polygons, the car leaves PITS only when outside both. The polygon it was not in used to force PIT EXIT.
+- A pits polygon must not cover the racing line: with no entry line in front of it, a car on track inside it is PITS and timing is gated.
+
 ## v0.21.0 - unreleased (not run on hardware)
 Engineer view for running the car from the pits. Web-side visibility only: recon detection, synthesis, sector timing, delta and geofence logic are unchanged.
 - Live tab: **Driver Display** mirror (what the TFT shows now, from the display owner stack), **Recon & Sector Map** card (state, live candidate feed with counts and peaks per type, verdict with style, sector count, confidence and synthesis breakdown) and a live **Event Log** of every `sysLogEvent` row.
