@@ -26,6 +26,9 @@ python -I Sessions/tools/build_session_logs.py Sessions/2026-11-12_36H_of_Collie
 | `laps.csv` | All 914 race laps, timed from S/F crossing to S/F crossing on the GPS clock, so laps that span a reset are still timed. Adds a stint number, `pit_lap`, `spans_reset` and the source files. | Lap and stint analysis, comparing the 12 h blocks. |
 | `crashes.csv` | One row per unplanned warm reset: time, uptime, free memory, speed, position, sector, last 3 events, and seconds lost. | The crash investigation. |
 | `crashes/crash_NN_LOG_xxxx.csv` | Rows and events from 60 s before to 30 s after each reset, across both files, on one timeline. | Looking closely at one crash. |
+| `heap_timeline.csv` | The 60 s `SYS/INFO` vitals row split into columns: heap, minheap, Wi-Fi, RSSI, GNSS, loop times, state. | Memory and Wi-Fi trends. |
+
+The crash analysis and fix plan are in [crash_investigation.md](crash_investigation.md).
 
 The 0–12h / 12–24h / 24–36h blocks are a column (`block`), not separate files, so you can filter on them without cutting through a stint.
 

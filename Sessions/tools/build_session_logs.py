@@ -3,6 +3,7 @@
 Raw logs are never modified. Outputs go to <session>/derived/:
   manifest.csv        one row per raw file: group, firmware, times, km, laps, how it ended, heap
   events.csv          every '# m=' event line of every file, with local time where it can be derived
+  heap_timeline.csv   the 60 s SYS/INFO vitals row (heap, minheap, wifi, rssi, loop times...) as columns
   race_10hz.csv.gz    every 10 Hz row inside the race window, with race time, 12 h block, race lap
   laps.csv            every race lap from S/F crossing to S/F crossing (absolute time, so laps
                       survive unit resets), pit / reset flags, stint number
@@ -215,6 +216,21 @@ def main():
             for e in lg.events:
                 it = lg.itow_of_m(e['m']) if timed[lg.name] else None
                 w.writerow([lg.name, lg.fw, f'{e["m"] / 1000:.3f}', local(it), race_s(it), block(it), e['tag'], e['text']])
+
+    # ---------- heap_timeline.csv ----------
+    vk = ['up', 'heap', 'minheap', 'wifi', 'rssi', 'sats', 'pdop', 'hz', 'gap', 'lapWorst', 'dispWorst',
+          'drops', 'state', 'car']
+    with open(os.path.join(out, 'heap_timeline.csv'), 'w', newline='') as f:
+        w = csv.writer(f)
+        w.writerow(['file', 'fw', 'local_time', 'race_s', 'block'] + vk)
+        for lg in logs:
+            for e in lg.events:
+                if e['tag'] != 'SYS/INFO' or not e['text'].startswith('up='):
+                    continue
+                d = dict(re.findall(r'(\w+)=(-?[\d.]+)', e['text']))
+                it = lg.itow_of_m(e['m']) if timed[lg.name] else None
+                w.writerow([lg.name, lg.fw, local(it), race_s(it), block(it)] +
+                           [d.get(k, '').rstrip('us') if k.endswith('Worst') else d.get(k, '') for k in vk])
 
     # ---------- race_10hz.csv.gz + laps ----------
     race_logs = [lg for lg, s in zip(logs, summ) if s['group'].startswith('race') and lg.rows]
