@@ -2,7 +2,26 @@
 
 Format: `vMAJOR.MINOR.PATCH - YYYY-MM-DD`. Tag each release in git as `fw-vX.Y.Z`.
 
-## v0.21.1 - unreleased (not compiled, not run on hardware)
+## v0.23.0 - unreleased (not run on hardware)
+- **Predicted lap time.** The web Live tab's lap cell used to count up from the line, and the TFT's lap time was reference + live delta: every lap opened at the best lap and carried every loss to the flag 1:1. Both now show a prediction:
+  - At the line it is the sum of a per-sector base: 0.25 × reference (best) sector + 0.50 × average of recent clean laps + 0.25 × last clean lap. With no clean lap yet it is the reference.
+  - During the lap it is elapsed + (rest of the current sector + later sectors) × form. Form is the median of actual/base over the sectors done so far, with incidents (more than 6% off) left out, clamped to ±2% and weighted by √(share of sectors done).
+  - A one-off mistake stays on the clock but is not projected onto the rest of the lap. A steady gain or loss scales what is left. At the line the prediction equals the real lap time, which is held 3 s (cyan on the TFT, **Last Lap** on the web).
+- A lap is learnt from when it is not pitted, every sector is timed, and it is within 107% of the reference. A sector over 110% of its reference keeps its previous history. History resets when the sector map changes (recon, stored map, reset, S/F set).
+- Display only: sector timing, the delta bar, cumulative delta, sector colours, best lap, reference promotion and the CAN status frame (`estimated_lap_ms`) are unchanged.
+- Web lap cell: **Predicted Lap**, with `elapsed` and `at line` (the prediction made at the start of the lap) underneath.
+- New `/data` fields `predicted_lap_ms`, `pred_line_ms`, `pred_final`, `pred_form`; the `live` WS frame adds `pl`, `pf`. `/data` buffer 3584 → 4096 bytes.
+- One `PRED/INFO` event row per lap: lap time, prediction at the line and its error, form, clean or excluded. Use these to tune the weights after the race.
+- Checked in a host port of the maths (reference pace, 1.5% slow, a 4 s mistake, 1% fast, pitted lap). Not run on hardware.
+
+## v0.22.0 - unreleased (not run on hardware)
+- **PIT LANE zone** (type 7, polygon): the corridor from pit entry to pit exit. For car state it counts as pits. Inside any pits or pit lane polygon from RUNNING or PIT ENTRY is PITS, and PIT EXIT holds until the car is clear of every pits and pit lane polygon. Leaving a fuel zone inside the lane returns to PITS. It's logged as `pit lane entered` when the car is in a lane polygon and no pits polygon. At Collie on 12 Nov the pits polygon didn't cover the whole lane, so the car read RUNNING in the pit area. Like the pits polygon, it must not cover the racing line.
+- Config tab: **+ Add Zone** takes a type and an optional name and starts drawing it. Without a name it gets the type name, numbered if already used (`PIT LANE`, `PIT LANE 2`). Every zone has a rename button (✎). Rename, then Save Config and Load to Device. Several zones of one type are allowed, up to 10 per circuit (`MAX_GEOFENCE_ZONES`) and the ~3.9 KB NVS limit. The editor shows the count and refuses an 11th zone or a polygon over 32 points, both of which the device used to drop silently.
+- Zone labels are HTML-escaped wherever the page draws them, since they are now free text.
+- Circuits saved by older versions load unchanged: zone types 1–6 keep their numbers.
+
+## v0.21.1 - unreleased (run on hardware 12 Nov, Collie)
+- Confirmed on track: `pits zone entered (was RUNNING)` logged with no entry line crossed, and a 5-lap and a 4-lap run timed normally (see `Sessions/2026-11-12_Collie`).
 - Pits zone triggers from RUNNING as well as PIT ENTRY: inside any pits polygon is PITS, so the pit entry line is optional. It used to fire only from PIT ENTRY, so a circuit without an entry line, or a car that booted in the garage, stayed RUNNING in the pits. Not from PIT EXIT, which still holds until the car is clear of every pits polygon. Entry and exit are logged as `GEO/INFO` rows.
 - With two pits polygons, the car leaves PITS only when outside both. The polygon it was not in used to force PIT EXIT.
 - A pits polygon must not cover the racing line: with no entry line in front of it, a car on track inside it is PITS and timing is gated.

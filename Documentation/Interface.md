@@ -8,7 +8,7 @@ Agile is the server. Clients connect to `ws://<ip>/ws` (port 80) and poll HTTP o
 
 | `t` | Rate | Fields |
 |---|---|---|
-| `live` | 10 Hz (only while a client is connected) | `d` live delta ms, `v` delta valid, `tl` timing live (false in pits / stationary), `bs` bar state (0 OK, 1 NOREF, 2 GRAY, 3 OFF), `sec` current sector, `lap`, `el` lap elapsed ms, `est` predicted lap ms, `spd` km/h, `cs` car state string, `pit` lap touched the pits, `br` bar full scale ms |
+| `live` | 10 Hz (only while a client is connected) | `d` live delta ms, `v` delta valid, `tl` timing live (false in pits / stationary), `bs` bar state (0 OK, 1 NOREF, 2 GRAY, 3 OFF), `sec` current sector, `lap`, `el` lap elapsed ms, `est` reference + live delta lap ms (legacy), `pl` predicted lap ms (v0.23.0), `pf` true while the completed lap is held after the line, `spd` km/h, `cs` car state string, `pit` lap touched the pits, `br` bar full scale ms |
 | `flagstate` | on change, and in reply to `pitstate` | `yellow`, `sc`, `red` (bool) |
 | `pitshown` | when a `pitmsg` is accepted | `id` |
 | `pitack` | when a request message expires | `id`, `by` (always `"timeout"`; the driver ack was removed in v0.12.0) |
@@ -76,7 +76,7 @@ All JSON bodies; replies are `{"ok":true}` or `{"ok":false,"error":…}`.
 
 | Group | Fields |
 |---|---|
-| Lap | `lap_number`, `lap_elapsed_ms`, `lap_state` (0 IDLE, 1 RECON, 2 RACING), `best_lap_ms`, `estimated_lap_ms`, `ref_lap_ms`, `ref_ready`, `lap_pitted`, `timing_live` |
+| Lap | `lap_number`, `lap_elapsed_ms`, `lap_state` (0 IDLE, 1 RECON, 2 RACING), `best_lap_ms`, `estimated_lap_ms` (reference + live delta, legacy), `predicted_lap_ms`, `pred_line_ms` (prediction at this lap's line), `pred_final`, `pred_form` (1.0 = on baseline pace), `ref_lap_ms`, `ref_ready`, `lap_pitted`, `timing_live` |
 | Delta | `live_delta_ms`, `sector_live_delta_ms`, `live_delta_valid`, `bar_state`, `bar_range_ms`, `cumulative_delta_ms` |
 | Sectors | `sector_count`, `current_sector`, `sectors[]{completed,delta_ms,cur_time_ms,colour}` |
 | Completed lap (latched at the line) | `last_lap{n,ms,delta,promoted,sc}`, `last_sectors[]{t,d}` |

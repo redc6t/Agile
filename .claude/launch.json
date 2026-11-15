@@ -4,7 +4,7 @@
     {
       "name": "agile-webui-mock",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["Documentation/WebUI/mock_server.py", "Sauce/Agile_v0_21_0.txt", "8765"],
+      "runtimeArgs": ["Documentation/WebUI/mock_server.py", "Sauce/Agile_v0_22_0.txt", "8765"],
       "port": 8765
     }
   ]

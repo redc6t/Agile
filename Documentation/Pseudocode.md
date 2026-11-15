@@ -395,7 +395,13 @@ lapTask():  every 10 ms (100 Hz)
                 NOREF  if no reference / no sectors / delta invalid
                 GRAY   if the active sector's ref duration is too short
                 OK     otherwise
-    estimated_lap ← elapsed + (reference total − reference time at matched point)
+    estimated_lap ← elapsed + (reference total − reference time at matched point)   // CAN only
+    predicted_lap ← predCompute()            // v0.23.0, TFT + web
+        base_i ← 0.25·ref_dur_i + 0.50·avg_i + 0.25·last_i   (ref_dur_i with no clean lap)
+        form   ← median(cur_i / base_i) over done sectors, |ratio−1| ≤ 6 %,
+                 clamped ±2 %, scaled by √(done / count)
+        result ← elapsed + (base_cur·(1 − share of current sector driven) + Σ later base) · form
+        for 3 s after the line: the completed lap time (pred_final)
     level_stale ← |fwd g| averaged over 3 s stationary > 0.12 g (clears < 0.09 g)
     fill every other snapshot field; publishSnapshot(ws_)
 
@@ -513,30 +519,32 @@ updateCarState(lat, lon, current):        // every valid fix, geoMutex take with
         PIT_ENTRY_LINE: > 8 m from line → arm; within 8 m while armed and RUNNING → PIT_ENTRY
         PIT_EXIT_LINE:  > 8 m → arm; within 8 m while armed and (PITS or PIT_ENTRY) → PIT_EXIT
         PITS polygon:   note inside (resolved after the loop)
+        PIT_LANE polygon (v0.22.0): note inside; counts as PITS below
         FUEL polygon:   note inside (resolved after the loop)
         CUSTOM polygon: inside → display override with the zone label (first match wins)
         SF_LINE:        ignored here (lap state machine)
-    v0.21.1: inside any PITS polygon, not in FUEL, no exit line this fix,
+    pit area = inside any PITS or PIT_LANE polygon
+    v0.21.1: inside the pit area, not in FUEL, no exit line this fix,
              current RUNNING or PIT_ENTRY → PITS (entry line optional)
-             current PITS and outside every PITS polygon → PIT_EXIT
-    if current = PIT_EXIT and outside every PITS polygon → RUNNING
+             current PITS and outside the pit area → PIT_EXIT
+    if current = PIT_EXIT and outside the pit area → RUNNING
     v0.20.0: inside any FUEL polygon → FUELLING from ANY state (wins over a line on the same fix)
-             FUELLING and outside every FUEL polygon → PITS if inside a PITS polygon, else RUNNING
+             FUELLING and outside every FUEL polygon → PITS if inside the pit area, else RUNNING
 ```
 
 ```mermaid
 stateDiagram-v2
     [*] --> RUNNING
     RUNNING --> PIT_ENTRY: within 8 m of armed pit-entry line
-    PIT_ENTRY --> PITS: inside Pits polygon
-    RUNNING --> PITS: inside Pits polygon (v0.21.1)
+    PIT_ENTRY --> PITS: inside Pits or Pit Lane polygon
+    RUNNING --> PITS: inside Pits or Pit Lane polygon (v0.21.1, lane v0.22.0)
     PIT_ENTRY --> PIT_EXIT: within 8 m of armed pit-exit line
     RUNNING --> FUELLING: inside Fuel polygon (any state, v0.20.0)
     PITS --> FUELLING: inside Fuel polygon
-    FUELLING --> PITS: leaves Fuel polygon, inside Pits polygon
-    FUELLING --> RUNNING: leaves Fuel polygon, outside Pits polygons
-    PITS --> PIT_EXIT: leaves Pits polygon / crosses exit line
-    PIT_EXIT --> RUNNING: outside every Pits polygon
+    FUELLING --> PITS: leaves Fuel polygon, inside Pits or Pit Lane polygon
+    FUELLING --> RUNNING: leaves Fuel polygon, outside Pits and Pit Lane polygons
+    PITS --> PIT_EXIT: leaves Pits and Pit Lane polygons / crosses exit line
+    PIT_EXIT --> RUNNING: outside every Pits and Pit Lane polygon
 ```
 
 ## 11. Pit messages and race-control flags
@@ -621,7 +629,7 @@ drawDeltaBarTime(barSmoothed, bar_state)   // y 0..27
             scale label ("1s", "500ms", …) top right when it changes
 drawInfoRow()                              // y 29..50, size 2
     left:  cumulative sector delta ±s.mmm (red > +10 ms, green < −10 ms, gray otherwise)
-    right: estimated lap m:ss.mmm (only when > 0)
+    right: predicted lap m:ss.mmm (only when > 0), cyan while the completed lap is held
 drawSectorBar()                            // y 52..73
     one segment per detected sector, width 284 / count (8 px at 32)
     completed → gray / green / red; active → dark gray with a white 2/3 block biased

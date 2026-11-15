@@ -25,7 +25,7 @@ The mock server replays a recon lap for these: IDLE for 8 s, a 40 s recon lap, t
 flowchart TB
     P[http://unit/] --> L[LIVE tab]
     P --> C[CONFIG tab]
-    L --> L1[Lap + lap time]
+    L --> L1[Lap + predicted lap]
     L --> L2[Sector delta cells, one per sector]
     L --> L3[Delta bar + number + scale]
     L --> L4[Micro-sector strip]
@@ -73,7 +73,7 @@ sequenceDiagram
 
 | Element | Source | Behaviour |
 |---|---|---|
-| **Lap / Lap Time** | `/data` `lap_number`, `lap_elapsed_ms` | Current lap and elapsed time, `m:ss.mmm`. |
+| **Lap / Predicted Lap** | `/data` `lap_number`, `predicted_lap_ms`, `pred_line_ms`, `pred_final`, `lap_elapsed_ms`; WS `live` `pl`, `pf`, `el` | v0.23.0: the predicted lap time, `m:ss.mmm`, updated at 10 Hz. Opens at a blend of the reference, average and last clean lap and moves with the driver's pace (see [Display](Display.md#racing-dash)). Underneath: `elapsed` and `at line` (the prediction made at the start of the lap). For 3 s after the line it shows the completed lap in cyan, labelled **Last Lap**. |
 | **Sector cells** S1…Sn | `/data` `sectors[]`, `sector_count`, `current_sector` | One cell per detected sector. 4 per row up to 8 sectors, 6 up to 18, 8 above that. Completed: delta `±s.mmm` in the sector colour. Active: `...`. Not reached: `--`. |
 | **Delta bar** | WS `live` (`d`, `v`, `tl`, `br`), else `/data` | Same rules as the TFT: red fills left when losing, green right when gaining, soft knee, EMA 0.35, scale from the device (`±2s` label top right). Amber box when the delta is invalid or `timing_live` is false (pits / stationary). |
 | **Delta number** | same | `±s.sss`; gray within ±10 ms, `---` when invalid. |
@@ -108,17 +108,18 @@ A **circuit** is one object: the S/F line plus the pit and fuel zones, stored in
 | Start / Finish | 6 `ZONE_SF_LINE` | 2-point line, drawn thicker | lap trigger; lay it **across both the track and the pit lane** |
 | Pit Entry Line | 1 | 2-point line | RUNNING → PIT ENTRY |
 | Pit Exit Line | 2 | 2-point line | → PIT EXIT |
-| Pits Zone | 3 | polygon (3+ points) | PIT ENTRY → PITS, PITS → PIT EXIT |
-| Fuel Zone | 4 | polygon | FUELLING while inside, from any state (v0.20.0); on leaving → PITS if inside the pits polygon, else RUNNING |
+| Pits Zone | 3 | polygon (3+ points) | RUNNING or PIT ENTRY → PITS, PITS → PIT EXIT |
+| Pit Lane | 7 (v0.22.0) | polygon | the corridor from pit entry to pit exit; counts as pits for car state. Keep it off the racing line |
+| Fuel Zone | 4 | polygon | FUELLING while inside, from any state (v0.20.0); on leaving → PITS if inside a pits or pit lane polygon, else RUNNING |
 | Custom | 5 | polygon | full-screen label on the TFT while inside |
 
 Workflow:
 
 1. **+ Add Circuit** (the name must not contain a comma), or click an existing circuit.
-2. Pick a tool and click the map: 2 points for a line, 3 or more for a polygon. **Clear Draft** starts the shape again.
+2. Pick a tool and click the map: 2 points for a line, 3 or more (up to 32) for a polygon. **Clear Draft** starts the shape again. Or, from v0.22.0, use the **+ Add Zone** row: pick a type, type a name (optional), press **+ Add Zone** and click the map.
 3. **Save Config** adds the draft to the circuit and stores it (`POST /geo/save`). Lines are cut to exactly two points.
 4. **Load to Device** arms it on the unit (`POST /geo/load`) and makes it the boot default. The list then marks it **ON DEVICE**.
-5. Zones can be removed with ✕ in the zone list; press Save Config afterwards.
+5. Zones can be renamed with ✎ (v0.22.0) or removed with ✕ in the zone list; press Save Config and Load to Device afterwards. The counter shows zones used out of 10, the most the device loads per circuit.
 6. **Delete Circuit** removes it from NVS (`POST /geo/delete`).
 
 ### WiFi

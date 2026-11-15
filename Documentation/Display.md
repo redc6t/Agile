@@ -126,6 +126,13 @@ Bar states:
 
 When the car is stationary (under 3 km/h for 2 s) or in the pit lane, the delta stops accumulating. The TFT bar then **holds its last value** (in the pit lane it is hidden behind the car-state screen anyway), while the web bar switches to the amber box because it also checks `timing_live`.
 
+**Predicted lap** (v0.23.0, right side of the info row). This is the lap time the driver will do at the pace measured so far, not a stopwatch:
+
+- At the line it opens at the sum of a per-sector base: 0.25 × reference (best) sector + 0.50 × average of recent clean laps + 0.25 × last clean lap.
+- During the lap it is elapsed + what is left of the lap at the base times × form. Form is the median of actual/base over the sectors done so far, with sectors more than 6% off treated as incidents and left out. It is clamped to ±2%.
+- A one-off mistake shows up once, as time on the clock. Steady pace, faster or slower, scales the rest of the lap.
+- At the line the prediction is the real lap time. It is held in **cyan** for 3 s, then the next lap's prediction starts.
+
 When does each racing scenario happen?
 
 - **Stored map accepted** (OK on the idle map prompt): lap 1 is a racing lap with known sector boundaries but no trace. The bar stays amber until the lap 1 trace is promoted at the line, so the delta arms from lap 2.
