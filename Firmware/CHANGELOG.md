@@ -25,7 +25,7 @@ First release, built on v0.23.1 (reset diagnostics) after the 36 Hours of Collie
 | `/recon` String | 4,096–7,168 B heap per request | ≈ 0.8–2.5 KB (no candidate feed) |
 | Response bodies of `/data`, `/recon`, `/events`, `/refpath`, `/geozones` | internal String copy held until sent | per-response PSRAM block, freed when the response ends |
 
-**About 71 KB of static internal RAM is freed.** Expected steady free heap is about 90–110 KB, against 21–44 KB in the race. This is an estimate; the first boot's `mem` row will show the real figure. If a PSRAM allocation fails, the boot shows `PSRAM FAIL` and laps are still timed at the line, without a trace or delta.
+**69,296 B (67.7 KB) of static internal RAM is freed, measured by compiling both versions with the same board settings:** v0.23.1 uses 194,364 B of globals, v1.0.0 uses 125,068 B. The 70,944 B removed is partly offset by about 1.6 KB of new state. Expected steady free heap is about 90–110 KB, against 21–44 KB in the race. This is an estimate; the first boot's `mem` row will show the real figure. If a PSRAM allocation fails, the boot shows `PSRAM FAIL` and laps are still timed at the line, without a trace or delta.
 
 **Not moved (v1.1):** `g_physBlock` (8 KB), `g_sessions` (≈5 KB), `g_preLog` (2.6 KB), the 7 KB log queue.
 
