@@ -91,6 +91,55 @@ Sector colour: 0 gray (within ±10 ms or not measured), 1 green (faster), 2 red 
 
 The completed lap time is not in the `live` frame. Clients fetch `/data` on every lap-number change and read `last_lap`.
 
+## v1.0.0 changes (backward compatible)
+
+Nothing existing is renamed or removed, except the agreed slimming of `/recon`.
+
+**`/data` adds:**
+
+| Field | Meaning |
+|---|---|
+| `fw` | `"v1.0.0"` |
+| `up_s` | uptime, s |
+| `utc_s` | unix time from GNSS, 0 until the first valid time |
+| `boot_ms` | reset to tasks running, ms |
+| `boot_fault` | `""` on a clean boot, else e.g. `"GNSS RATE, NO ZONES"` |
+| `session_id` | changes on `POST /session/new` (RTC RAM: survives a warm reset, 1 after power-on) |
+| `race_lap` | session lap in progress; survives a warm reset |
+| `boot_lap` | same value as `lap_number` |
+| `map_auto` | the stored map was accepted automatically after an unplanned reset |
+| `rst` | `{reason:"PANIC", code:4, planned:bool, unplanned_n, prev_up_s}`; `planned` is true for a power-on and the unit's own restarts |
+| `heap_min`, `heap_big`, `psram_free` | internal minimum, largest internal block, PSRAM free (bytes). `heap_free` is unchanged |
+| `web` | `{ws, rpm, inflight, r503, shed}`: WebSocket clients, requests last minute, PSRAM responses in flight, 503s since boot, shedding now |
+| `gnss_nack` | configuration keys the receiver refused at boot, `""` if none |
+
+**Admission control:**
+- When internal heap is low (below 12 KB free or a 6 KB largest block), `GET /data`, `/recon`, `/events`, `/refpath`, `/geozones` and `/geo/list` answer **`503` with an empty body** and `Retry-After: 2`.
+- Clients should back off and retry; the v1.0.0 page backs off 1 → 2 → 5 s.
+- The `live` push pauses at the same time.
+- POSTs, `/update` and the WebSocket control frames are not shed.
+
+**WebSocket:**
+- At most 4 clients. A 5th is closed with code **1013** right after connecting; use HTTP polling.
+- New device-to-client frame on connect: `{"t":"hello","fw","up","session_id","rst","unplanned_n"}`.
+- `live` is sent per client and skipped for a client whose send queue is full, so a slow client sees gaps instead of a backlog.
+
+**`GET /recon`:** `ev` is always `[]` and `next` equals `n`. The candidate feed is removed; acceptance was validated over the race. All other fields are unchanged, including the per-type counts and peaks.
+
+**New `POST /session/new`:**
+- No body.
+- Restarts `race_lap`, the unplanned-reset count and `session_id` (new id), and logs `SES/INFO new session`.
+- Answers 409 `vehicle moving` above 5 km/h.
+
+**OTA (`POST /update`):**
+- Now allowed while stationary in **PITS or FUELLING**, or with no lap running.
+- Otherwise refused with `why` = `car on track` or `vehicle moving`.
+
+**PWSM / recorder:**
+- No field they read has changed.
+- A 503 with an empty body should be treated as "try again in 2 s", not as an error.
+- `heap_free` is still internal free heap.
+
 ## CAN (compiled out)
 
 `CAN_ENABLED 0` in v0.17.0. When enabled: 500 kbit/s on GPIO1/2, `0x600` live (100 ms), `0x601` sector event, `0x602` status (1 s). See [Pseudocode §2](Pseudocode.md#2-freertos-task-map).
