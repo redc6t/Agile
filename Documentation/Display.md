@@ -23,6 +23,21 @@ Some consequences of this order:
 
 ## Boot
 
+### v1.0.0: logo splash
+
+![](Display/screens/boot_splash.png)
+
+From v1.0.0 the boot shows only the Mullaloo Motorsport Engineering splash.
+- **Logo:** the round-capped mark on the left, in off-white.
+- **Stripes:** red #E53828, orange #F57919 and off-white #F6F2EE, shorter from top to bottom. The words are right-aligned 3 px from the panel border, the same margin as the logo on the left, and each stripe ends 6 px before its word.
+- **Background:** #161618, the sticker colours.
+
+**Timing.** The splash is drawn as soon as the TFT starts and stays up for 3 s while the boot runs behind it. The idle screen then takes over. On a real fault (no GNSS, GNSS below 10 Hz, no IMU, no log, no zones, PSRAM failure) a plain screen follows the splash for 1.5 s: firmware name in cyan, fault text in red. The per-stage status lines and the 6 s hold below are gone.
+
+The image above is a pixel-exact render at 4× zoom: the panel's 5×7 font and RGB565 colours.
+
+### Up to v0.23.1
+
 Shown from `setup()` before the tasks start. Each subsystem prints its result on the status line (y = 44). If any fault is found (GNSS failed or below 10 Hz, GNSS NACKs, IMU failed, single trace buffer, no geofence zones) the screen is held for 6 s so it can be read.
 
 | All OK | GNSS below target rate |
