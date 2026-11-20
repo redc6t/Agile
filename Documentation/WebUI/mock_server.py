@@ -4,22 +4,33 @@ Used to produce the screenshots in Documentation/WebUI.md. The HTML and
 JavaScript are taken verbatim from the HTML_HEAD / HTML_SCRIPT raw literals
 of the sketch; only the JSON endpoints are faked. One small script is
 appended so a screenshot can open the Config tab and select a circuit from
-the URL hash (#config). The WebSocket is not emulated, so the Live tab runs
-on its /data poll fallback.
+the URL hash (#config). Without a replay log the WebSocket is not emulated,
+so the Live tab runs on its /data poll fallback.
+
+v1.1.0: with a third argument, a unit log (LOG_xxxx.CSV) is replayed in real
+time from the first lap row, looping. /data then carries speed_kph, g_ax,
+g_ay, g_ph and gs (stats from gstats_check.GStats, the firmware mirror), and
+/ws sends the 10 Hz "live" frame, so the G-meter runs as on the unit.
 
 Usage:
-    python mock_server.py <path-to-LapTimer_vX.ino-or-.txt> [port]
+    python mock_server.py <path-to-LapTimer_vX.ino-or-.txt> [port] [LOG_xxxx.CSV]
     then open http://localhost:8765/  or  http://localhost:8765/#config
 """
 
+import base64
+import hashlib
 import json
 import math
+import os
 import re
+import struct
 import sys
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 SRC = sys.argv[1]
 PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8765
+REPLAY = sys.argv[3] if len(sys.argv) > 3 else None
 
 with open(SRC, encoding="utf-8") as f:
     source = f.read()
@@ -114,6 +125,72 @@ def data():
         "sectors": sectors,
         "last_sectors": [{"t": t, "d": d} for t, d in secs],
     }
+
+
+# --- v1.1.0: replay a unit log for the G-meter -----------------------------
+RP = None
+if REPLAY:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import gstats_check as gsc
+    _rows = gsc.read_rows(REPLAY)
+    _first = next((i for i, r in enumerate(_rows) if r["state"] != 0), 0)
+    _rows = _rows[_first:]
+    RP = {"rows": _rows, "i": 0, "g": gsc.GStats(), "lock": threading.Lock(),
+          "t0": None, "base": _rows[0]["itow"], "loops": 0}
+
+
+def rp_step():
+    """Advance the replay to wall-clock time and feed every epoch passed."""
+    if RP is None:
+        return None
+    with RP["lock"]:
+        now = time.time()
+        if RP["t0"] is None:
+            RP["t0"] = now
+        rows, g = RP["rows"], RP["g"]
+        want = RP["base"] + int((now - RP["t0"]) * 1000)
+        while RP["i"] < len(rows) and rows[RP["i"]]["itow"] <= want:
+            r = rows[RP["i"]]
+            g.epoch(r["itow"], r["v"], r["ax"], r["ay"], r["lap"], r["state"] != 0)
+            RP["i"] += 1
+        if RP["i"] >= len(rows):                 # loop: a new session
+            RP.update(i=0, g=gsc.GStats(), t0=now, loops=RP["loops"] + 1)
+            g = RP["g"]
+        r = rows[max(0, RP["i"] - 1)]
+        ax, ay, ph, v = g.last
+        return {"v": r["v"], "ax": ax, "ay": ay, "ph": ph, "lap": r["lap"],
+                "s": gsc.summary(g.ses), "l": gsc.summary(g.lap), "lap_n": g.lap_n or 0}
+
+
+def rp_data(d):
+    x = rp_step()
+    if x is None:
+        return d
+    d.update(speed_kph=round(x["v"], 1), g_ax=round(x["ax"], 3), g_ay=round(x["ay"], 3),
+             g_ph=x["ph"], lap_number=x["lap"])
+
+    def blk(b):
+        return {"t": b["t"], "cav": round(b["cav"], 1), "cmin": round(b["cmin"], 1),
+                "bpk": round(b["bpk"], 3), "bav": round(b["bav"], 3),
+                "lpk": round(b["lpk"], 3), "apk": round(b["apk"], 3)}
+    d["gs"] = {"min_kph": 10, "thr": [0.20, 0.28, 0.16], "lap_n": x["lap_n"],
+               "s": blk(x["s"]), "l": blk(x["l"])}
+    return d
+
+
+def rp_live():
+    x = rp_step()
+    return {"t": "live", "d": -640, "v": True, "tl": True, "bs": 0, "sec": 3,
+            "lap": x["lap"], "el": 0, "est": 0, "pl": 148320, "pf": False,
+            "spd": round(x["v"], 1), "cs": "RUNNING", "pit": False, "br": 2000,
+            "ax": round(x["ax"], 2), "ay": round(x["ay"], 2), "ph": x["ph"]}
+
+
+def ws_frame(text):
+    b = text.encode()
+    n = len(b)
+    hdr = bytes([0x81, n]) if n < 126 else bytes([0x81, 126]) + struct.pack(">H", n)
+    return hdr + b
 
 
 # --- v0.21.0 engineer view: a recon lap replayed in real time -------------
@@ -214,7 +291,7 @@ def events():
 ROUTES = {
     "/recon": recon,
     "/events": events,
-    "/data": data,
+    "/data": lambda: rp_data(data()),
     "/refpath": lambda: [{"lat": a, "lon": b} for a, b in REF],
     "/geozones": lambda: {"zones": ZONES},
     "/geo/list": lambda: {"Craigie": ZONES, "Wanneroo": [], "Collie": [], "Kewdale": []},
@@ -261,6 +338,27 @@ class H(BaseHTTPRequestHandler):
     def do_GET(self):
         H.cur_path = self.path
         path = self.path.split("?")[0]
+        if path == "/ws":
+            if RP is None or "websocket" not in (self.headers.get("Upgrade") or "").lower():
+                self.send_response(404)
+                self.end_headers()
+                return
+            key = self.headers.get("Sec-WebSocket-Key", "")
+            acc = base64.b64encode(hashlib.sha1(
+                (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encode()).digest()).decode()
+            self.send_response(101)
+            self.send_header("Upgrade", "websocket")
+            self.send_header("Connection", "Upgrade")
+            self.send_header("Sec-WebSocket-Accept", acc)
+            self.end_headers()
+            self.close_connection = True
+            try:
+                while True:                      # 10 Hz, like wsPushLive
+                    self.wfile.write(ws_frame(json.dumps(rp_live())))
+                    self.wfile.flush()
+                    time.sleep(0.1)
+            except OSError:
+                return
         if path == "/":
             body = (HTML_HEAD + HTML_SCRIPT.replace("</body>", HOOK + "</body>")).encode()
             ctype = "text/html; charset=utf-8"

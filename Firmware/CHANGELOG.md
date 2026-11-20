@@ -2,6 +2,29 @@
 
 Format: `vMAJOR.MINOR.PATCH - YYYY-MM-DD`. Tag each release in git as `fw-vX.Y.Z`.
 
+## v1.1.0 - unreleased (G-meter on the Live page)
+
+Web and telemetry only. The lap trigger, recon detection, synthesis, sector pass, delta, reference promotion and prediction are unchanged. Built on v1.0.0.
+
+### G-meter and readout (Live tab)
+- **New card under the micro-sector strip:** a 96 px G-meter (inline SVG, rings at 0.5 g and 1 g, FWD at the top) and a readout of speed, felt phase, longitudinal and lateral g.
+- **The dot shows the force the driver feels,** the opposite of the car's acceleration: under braking it moves towards FWD, in a corner it moves to the outside. It is clamped to the 1 g ring. A trail shows the last 9 samples.
+- **Phase colours:** braking red, cornering amber, accelerating green, coasting grey, defined as CSS custom properties (`--ph-*`). The page has no light theme, so the light-theme colours are not used.
+- **Data:** the WebSocket `live` frame (10 Hz) gains `ax`, `ay` (g, vehicle frame, forward + / left +) and `ph` (0 coast, 1 brake, 2 corner, 3 accel). `/data` gains `g_ax`, `g_ay`, `g_ph` for the polling fallback. No field was renamed or removed. The page redraws at most about 20 times a second with `requestAnimationFrame` and only changes text and SVG attributes.
+
+### Session stats (Live tab, same card)
+- **Accumulated on the unit,** so they survive a page reload, are the same on every browser, and survive a warm reset (RTC no-init RAM, beside `race_lap`). `POST /session/new` and a power-on reset them. The "This lap" column resets at every `race_lap` change.
+- **What counts:** one sample per GNSS epoch while a lap is running and the speed is 10 km/h or more. Each sample is weighted by the iTOW step back to the previous epoch; a step longer than 500 ms carries no weight. The g values are the raw vehicle-frame values the log row carries for that epoch, so any log file reproduces the stats (`Documentation/WebUI/gstats_check.py`).
+- **Stats:** average and minimum cornering speed, peak and average braking, peak lateral, peak acceleration, and the time split braking / cornering / accelerating / coasting as one bar. Each figure shows `--` until its phase has time. `/data gs` carries them: `t` (ms per phase, in the order coast, brake, corner, accel), `cav`, `cmin`, `bpk`, `bav`, `lpk`, `apk`, for the session (`s`) and the current lap (`l`, lap `lap_n`), plus `thr` and `min_kph`.
+- **Phase thresholds are the reporting thresholds** from Config > Detection Thresholds (default 0.20 / 0.28 / 0.16 g), tested in the recon detector's order: braking, then cornering, then accelerating. The task brief proposed 0.20 / 0.30 / 0.15 g; the firmware's values are used instead. The recon floors (0.08 / 0.10 / 0.08 g) are a candidate-pool setting and would call almost nothing coasting.
+
+### Checks
+- **Log check:** `gstats_check.py` computes the stats two independent ways (a mirror of `gsEpoch()` and a filter-and-aggregate pass). Both agree on every figure for `Sessions/2026-11-06_Craigie/unit_logs/LOG_0002.CSV` and `Sessions/2026-11-12_36H_of_Collie/unit_logs/LOG_0021.CSV`.
+- **Known limit:** peaks are single 10 Hz samples, so a kerb strike shows up as a peak. In LOG_0021, peak lateral was 2.22 g and peak braking 2.07 g, against a 99th percentile of 1.14 g and 0.75 g.
+- **`/data` buffer:** `JSON_BUF_LEN` 6,144 → 7,168 B (PSRAM), so `gs` (about 450 B) cannot push the last sectors of a 32-sector map off the end.
+- **Compiled** with arduino-cli, Arduino-ESP32 3.3.12, ESP32S3 Dev Module, 16 MB QIO, OPI PSRAM, TinyUSB, custom partitions, against v1.0.0 with the same settings. Not run on hardware.
+- **Size:** page in flash 103,688 → 112,480 B (+8,792 B, +8.5 %). Sketch 1,318,330 → 1,328,394 B (+10,064 B) of the 4 MB app slot. Static RAM 125,068 → 126,076 B (+1,008 B), mostly the stats blocks carried in each `LapSnapshot_t` copy.
+
 ## v1.0.0 - unreleased (NOT compiled, NOT run on hardware)
 
 First release, built on v0.23.1 (reset diagnostics) after the 36 Hours of Collie (13–14 Nov 2026: 914 laps, 21 unplanned warm resets, see `Sessions/2026-11-12_36H_of_Collie/`). Firmware 1.0.0 for hardware v1.0. The lap trigger, recon detection, sector synthesis, sector pass, live and cumulative delta, reference promotion and the prediction maths are unchanged, except where D5, D8 and D9 below say otherwise. Nothing here has been compiled; the page JavaScript was syntax-checked and loaded against the mock server.

@@ -4,8 +4,23 @@
     {
       "name": "agile-webui-mock",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["Documentation/WebUI/mock_server.py", "Sauce/Agile_v0_22_0.txt", "8765"],
+      "runtimeArgs": [
+        "Documentation/WebUI/mock_server.py",
+        "Sauce/Agile_v0_22_0.txt",
+        "8765"
+      ],
       "port": 8765
+    },
+    {
+      "name": "agile-webui-gmeter",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "Documentation/WebUI/mock_server.py",
+        "Sauce/Agile_v1_1_0.txt",
+        "8766",
+        "Sessions/2026-11-06_Craigie/unit_logs/LOG_0002.CSV"
+      ],
+      "port": 8766
     }
   ]
 }

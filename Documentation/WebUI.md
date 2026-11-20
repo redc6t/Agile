@@ -19,6 +19,29 @@ For running the car from the pits with nobody in the car who knows the unit:
 
 The mock server replays a recon lap for these: IDLE for 8 s, a 40 s recon lap, then the approve window. `POST /nuke` restarts it.
 
+## v1.1.0 G-meter
+
+![G-meter card](WebUI/img/gmeter.png)
+
+A card under the micro-sector strip on the Live tab:
+
+- **G-meter:** the dot is the force the driver feels, so it moves towards FWD under braking and to the outside of a corner. Rings at 0.5 g and 1 g; values above 1 g sit on the outer ring. The trail is the last 9 samples. Colour by phase: braking red, cornering amber, accelerating green, coasting grey.
+- **Readout:** speed, felt phase, longitudinal and lateral g (magnitudes).
+- **Stats, Session and This lap:** average and minimum cornering speed, peak and average braking, peak lateral, peak acceleration, and the time split as one bar. They are kept on the unit, so every browser shows the same figures and a reload loses nothing. They count while a lap is running above 10 km/h, reset with `POST /session/new` or a power-on, and use the Detection Thresholds from the Config tab.
+
+| Source | Fields |
+|---|---|
+| WS `live` (10 Hz) | `ax`, `ay` (g, forward + / left +), `ph` (0 coast, 1 brake, 2 corner, 3 accel) |
+| `/data` | `g_ax`, `g_ay`, `g_ph` (fallback when the WebSocket is down), `gs` (stats) |
+
+To see it without a unit, replay a log through the mock server; it also emulates the WebSocket in this mode:
+
+```bash
+python Documentation/WebUI/mock_server.py Sauce/Agile_v1_1_0.txt 8766 Sessions/2026-11-06_Craigie/unit_logs/LOG_0002.CSV
+```
+
+To check the stats against a log file: `python Documentation/WebUI/gstats_check.py <LOG_xxxx.CSV>`.
+
 ## Page structure
 
 ```mermaid
